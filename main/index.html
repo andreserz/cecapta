@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Call Blaster AI - Solución de IA para CECAPTA">
+    <meta name="description" content="Call Blaster AI - Automatiza tus llamadas con IA para CECAPTA">
     <title>Call Blaster AI - CECAPTA</title>
     
     <!-- Fonts -->
@@ -23,6 +23,21 @@
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cb-primary': '#3d4f6d',
+                        'cb-secondary': '#2a3a52',
+                        'cb-accent': '#ffa600',
+                        'cb-gray': '#e6e6e6',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 <body class="min-h-screen">
     
@@ -35,7 +50,7 @@
                 </label>
                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                     <li><a href="#inicio">Inicio</a></li>
-                    <li><a href="#sobre-nosotros">Sobre Nosotros</a></li>
+                    <li><a href="#servicios">Servicios</a></li>
                     <li><a href="#timeline">Timeline</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                 </ul>
@@ -47,17 +62,14 @@
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
-                <li><a href="#inicio" class="font-medium">Inicio</a></li>
-                <li><a href="#sobre-nosotros" class="font-medium">Sobre Nosotros</a></li>
-                <li><a href="#timeline" class="font-medium">Timeline</a></li>
-                <li><a href="#contacto" class="font-medium">Contacto</a></li>
+                <li><a href="#inicio" class="font-medium hover:text-cb-accent">Inicio</a></li>
+                <li><a href="#servicios" class="font-medium hover:text-cb-accent">Servicios</a></li>
+                <li><a href="#timeline" class="font-medium hover:text-cb-accent">Timeline</a></li>
+                <li><a href="#contacto" class="font-medium hover:text-cb-accent">Contacto</a></li>
             </ul>
         </div>
         <div class="navbar-end">
-            <a href="/api_tests" class="btn btn-primary btn-sm">
-                <i data-lucide="test-tube" class="w-4 h-4"></i>
-                API Tests
-            </a>
+            <span class="text-sm font-semibold text-cb-primary">CECAPTA</span>
         </div>
     </nav>
 
@@ -65,9 +77,9 @@
     <section id="inicio" class="hero min-h-screen hero-gradient relative overflow-hidden">
         <!-- Animated Background Elements -->
         <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate__animated animate__fadeIn float-animation"></div>
-            <div class="absolute top-40 right-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate__animated animate__fadeIn float-animation" style="animation-delay: 1s;"></div>
-            <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate__animated animate__fadeIn float-animation" style="animation-delay: 2s;"></div>
+            <div class="absolute top-20 left-10 w-72 h-72 bg-cb-accent/20 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate__animated animate__fadeIn float-animation"></div>
+            <div class="absolute top-40 right-10 w-72 h-72 bg-white/10 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate__animated animate__fadeIn float-animation" style="animation-delay: 1s;"></div>
+            <div class="absolute -bottom-8 left-20 w-72 h-72 bg-cb-accent/15 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate__animated animate__fadeIn float-animation" style="animation-delay: 2s;"></div>
         </div>
         
         <div class="hero-content text-center relative z-10">
@@ -78,20 +90,20 @@
                 <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 animate__animated animate__fadeInUp">
                     Call Blaster AI
                 </h1>
-                <p class="text-xl md:text-2xl text-white/90 mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
-                    Solución de Inteligencia Artificial
+                <p class="text-2xl md:text-3xl text-white/90 mb-4 animate__animated animate__fadeInUp font-semibold" style="animation-delay: 0.2s;">
+                    Atención instantánea, seguimiento impecable
                 </p>
-                <p class="text-lg md:text-xl text-white/80 mb-8 animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
-                    Desarrollado para <span class="font-bold text-white">CECAPTA</span>
+                <p class="text-xl md:text-2xl text-white/80 mb-8 animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                    La revolución en servicio al cliente para <span class="font-bold text-cb-accent">CECAPTA</span>
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center animate__animated animate__fadeInUp" style="animation-delay: 0.6s;">
-                    <a href="#sobre-nosotros" class="btn btn-lg btn-primary glass-effect border-white/20">
-                        <i data-lucide="info" class="w-5 h-5"></i>
-                        Conocer Más
+                    <a href="#servicios" class="btn btn-lg bg-cb-accent hover:bg-cb-accent/90 text-white border-0">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                        Conocer Servicios
                     </a>
-                    <a href="/api_tests" class="btn btn-lg btn-outline text-white border-white hover:bg-white hover:text-purple-700">
-                        <i data-lucide="test-tube-2" class="w-5 h-5"></i>
-                        Pruebas de API
+                    <a href="#timeline" class="btn btn-lg btn-outline text-white border-white hover:bg-white hover:text-cb-primary">
+                        <i data-lucide="calendar" class="w-5 h-5"></i>
+                        Ver Timeline
                     </a>
                 </div>
             </div>
@@ -103,167 +115,206 @@
         </div>
     </section>
 
-    <!-- Sobre Nosotros Section -->
-    <section id="sobre-nosotros" class="py-20 px-4">
+    <!-- Servicios Section -->
+    <section id="servicios" class="py-20 px-4">
         <div class="container mx-auto max-w-6xl">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 gradient-text animate__animated animate__fadeInUp">
-                Sobre Nosotros
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 text-cb-primary animate__animated animate__fadeInUp">
+                Nuestros Servicios
             </h2>
-            <p class="text-center text-gray-600 mb-16 text-lg animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
-                Innovación y tecnología al servicio de CECAPTA
+            <p class="text-center text-cb-primary/70 mb-16 text-lg animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+                Soluciones de IA especializadas para cada necesidad de tu negocio
             </p>
             
             <div class="grid md:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="card bg-base-100 shadow-xl card-hover glass-effect animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                <!-- Card 1: Sales -->
+                <div class="card bg-white shadow-xl card-hover border-t-4 border-cb-accent animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
                     <div class="card-body items-center text-center">
-                        <div class="bg-gradient-to-br from-blue-500 to-purple-600 p-4 rounded-full mb-4">
-                            <i data-lucide="brain" class="w-12 h-12 text-white"></i>
+                        <div class="bg-gradient-to-br from-cb-primary to-cb-secondary p-4 rounded-full mb-4">
+                            <i data-lucide="trending-up" class="w-12 h-12 text-white"></i>
                         </div>
-                        <h3 class="card-title text-2xl">Inteligencia Artificial</h3>
-                        <p class="text-gray-600">
-                            Tecnología de vanguardia en IA para optimizar procesos y mejorar la experiencia del cliente.
+                        <h3 class="card-title text-2xl text-cb-primary">Call Blaster Sales</h3>
+                        <p class="text-cb-primary/70">
+                            Automatización de ventas o agendamiento con inteligencia artificial que maximiza tus conversiones.
                         </p>
+                        <div class="badge badge-outline border-cb-accent text-cb-accent mt-2">Ventas</div>
                     </div>
                 </div>
                 
-                <!-- Card 2 -->
-                <div class="card bg-base-100 shadow-xl card-hover glass-effect animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                <!-- Card 2: Collection -->
+                <div class="card bg-white shadow-xl card-hover border-t-4 border-cb-accent animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
                     <div class="card-body items-center text-center">
-                        <div class="bg-gradient-to-br from-purple-500 to-pink-600 p-4 rounded-full mb-4">
-                            <i data-lucide="phone-call" class="w-12 h-12 text-white"></i>
+                        <div class="bg-gradient-to-br from-cb-accent to-orange-600 p-4 rounded-full mb-4">
+                            <i data-lucide="wallet" class="w-12 h-12 text-white"></i>
                         </div>
-                        <h3 class="card-title text-2xl">Call Center</h3>
-                        <p class="text-gray-600">
-                            Soluciones avanzadas para gestión de llamadas y atención al cliente automatizada.
+                        <h3 class="card-title text-2xl text-cb-primary">Call Blaster Collection</h3>
+                        <p class="text-cb-primary/70">
+                            Cobranza inteligente y multicanal que respeta las regulaciones y optimiza la recuperación.
                         </p>
+                        <div class="badge badge-outline border-cb-accent text-cb-accent mt-2">Cobranza</div>
                     </div>
                 </div>
                 
-                <!-- Card 3 -->
-                <div class="card bg-base-100 shadow-xl card-hover glass-effect animate__animated animate__fadeInUp" style="animation-delay: 0.6s;">
+                <!-- Card 3: Support -->
+                <div class="card bg-white shadow-xl card-hover border-t-4 border-cb-accent animate__animated animate__fadeInUp" style="animation-delay: 0.6s;">
                     <div class="card-body items-center text-center">
-                        <div class="bg-gradient-to-br from-pink-500 to-red-600 p-4 rounded-full mb-4">
-                            <i data-lucide="zap" class="w-12 h-12 text-white"></i>
+                        <div class="bg-gradient-to-br from-cb-secondary to-cb-primary p-4 rounded-full mb-4">
+                            <i data-lucide="headphones" class="w-12 h-12 text-white"></i>
                         </div>
-                        <h3 class="card-title text-2xl">Automatización</h3>
-                        <p class="text-gray-600">
-                            Procesos automatizados que incrementan la eficiencia y reducen tiempos de respuesta.
+                        <h3 class="card-title text-2xl text-cb-primary">Call Blaster Support</h3>
+                        <p class="text-cb-primary/70">
+                            Soporte técnico automatizado 24/7 que nunca duerme y siempre está disponible para tus clientes.
                         </p>
+                        <div class="badge badge-outline border-cb-accent text-cb-accent mt-2">Soporte</div>
                     </div>
                 </div>
             </div>
             
-            <!-- Stats -->
-            <div class="stats stats-vertical lg:stats-horizontal shadow-xl mt-16 w-full glass-effect animate__animated animate__fadeInUp" style="animation-delay: 0.8s;">
-                <div class="stat">
-                    <div class="stat-figure text-primary">
-                        <i data-lucide="building-2" class="w-8 h-8"></i>
+            <!-- Características -->
+            <div class="mt-16 bg-white rounded-2xl shadow-xl p-8 animate__animated animate__fadeInUp" style="animation-delay: 0.8s;">
+                <h3 class="text-3xl font-bold text-center mb-8 text-cb-primary">¿Por qué Call Blaster AI?</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-cb-accent/10 p-3 rounded-lg flex-shrink-0">
+                            <i data-lucide="clock" class="w-6 h-6 text-cb-accent"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-cb-primary mb-1">Atención 24/7</h4>
+                            <p class="text-cb-primary/70">Servicio ininterrumpido para atención a cliente y soporte, con horarios configurables para ventas y cobranza.</p>
+                        </div>
                     </div>
-                    <div class="stat-title">Cliente</div>
-                    <div class="stat-value text-primary">CECAPTA</div>
-                    <div class="stat-desc">Empresa líder en su sector</div>
-                </div>
-                
-                <div class="stat">
-                    <div class="stat-figure text-secondary">
-                        <i data-lucide="calendar" class="w-8 h-8"></i>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="bg-cb-accent/10 p-3 rounded-lg flex-shrink-0">
+                            <i data-lucide="zap" class="w-6 h-6 text-cb-accent"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-cb-primary mb-1">Implementación Rápida</h4>
+                            <p class="text-cb-primary/70">Implementación básica en 48-72 horas. Inicia el mismo día con nuestra plataforma de autoservicio.</p>
+                        </div>
                     </div>
-                    <div class="stat-title">Kickoff</div>
-                    <div class="stat-value text-secondary">Oct 2025</div>
-                    <div class="stat-desc">15 de Octubre de 2025</div>
-                </div>
-                
-                <div class="stat">
-                    <div class="stat-figure text-accent">
-                        <i data-lucide="rocket" class="w-8 h-8"></i>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="bg-cb-accent/10 p-3 rounded-lg flex-shrink-0">
+                            <i data-lucide="globe" class="w-6 h-6 text-cb-accent"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-cb-primary mb-1">Multilenguaje</h4>
+                            <p class="text-cb-primary/70">Comunicación en español, inglés y más idiomas para atender a todos tus clientes.</p>
+                        </div>
                     </div>
-                    <div class="stat-title">Estado</div>
-                    <div class="stat-value text-accent">Activo</div>
-                    <div class="stat-desc">En desarrollo</div>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="bg-cb-accent/10 p-3 rounded-lg flex-shrink-0">
+                            <i data-lucide="shield-check" class="w-6 h-6 text-cb-accent"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-cb-primary mb-1">Seguridad y Privacidad</h4>
+                            <p class="text-cb-primary/70">Cumplimiento estricto de normas de privacidad y ley de manejo de información sensible de México.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="bg-cb-accent/10 p-3 rounded-lg flex-shrink-0">
+                            <i data-lucide="layers" class="w-6 h-6 text-cb-accent"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-cb-primary mb-1">Todo en Uno</h4>
+                            <p class="text-cb-primary/70">Unifica ventas, cobranza, atención a cliente y soporte en una sola herramienta poderosa.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="bg-cb-accent/10 p-3 rounded-lg flex-shrink-0">
+                            <i data-lucide="trending-up" class="w-6 h-6 text-cb-accent"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-cb-primary mb-1">Escalabilidad</h4>
+                            <p class="text-cb-primary/70">Atiende un gran volumen de clientes sin costo extra. Escala al momento según tus necesidades.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Timeline Section -->
-    <section id="timeline" class="py-20 px-4 bg-gradient-to-br from-gray-50 to-gray-100">
+    <section id="timeline" class="py-20 px-4 bg-gradient-to-br from-cb-gray to-white">
         <div class="container mx-auto max-w-4xl">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 gradient-text animate__animated animate__fadeInUp">
-                Línea de Tiempo
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 text-cb-primary animate__animated animate__fadeInUp">
+                Línea de Tiempo del Proyecto
             </h2>
-            <p class="text-center text-gray-600 mb-16 text-lg animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
-                Nuestro camino hacia la innovación
+            <p class="text-center text-cb-primary/70 mb-16 text-lg animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+                Nuestro camino hacia la transformación digital de CECAPTA
             </p>
             
             <ul class="timeline timeline-vertical">
                 <li class="animate__animated animate__fadeInLeft">
-                    <div class="timeline-start timeline-box glass-effect shadow-lg">
+                    <div class="timeline-start timeline-box bg-white shadow-lg border-l-4 border-cb-accent">
                         <div class="flex items-center gap-2 mb-2">
-                            <i data-lucide="flag" class="w-5 h-5 text-primary"></i>
-                            <h3 class="font-bold text-lg">Kickoff del Proyecto</h3>
+                            <i data-lucide="flag" class="w-5 h-5 text-cb-accent"></i>
+                            <h3 class="font-bold text-lg text-cb-primary">Kickoff del Proyecto</h3>
                         </div>
-                        <time class="font-mono text-sm text-gray-500">15 de Octubre, 2025</time>
-                        <p class="mt-2 text-gray-600">Inicio oficial del proyecto Call Blaster AI para CECAPTA. Definición de objetivos y alcance.</p>
+                        <time class="font-mono text-sm text-cb-accent font-semibold">15 de Octubre, 2025</time>
+                        <p class="mt-2 text-cb-primary/70">Inicio oficial del proyecto Call Blaster AI para CECAPTA. Definición de objetivos, alcance y estrategia de implementación.</p>
                     </div>
                     <div class="timeline-middle">
-                        <div class="bg-primary rounded-full p-2">
+                        <div class="bg-cb-accent rounded-full p-2">
                             <i data-lucide="check" class="w-4 h-4 text-white"></i>
                         </div>
                     </div>
-                    <hr class="bg-primary"/>
+                    <hr class="bg-cb-accent"/>
                 </li>
                 
                 <li class="animate__animated animate__fadeInRight" style="animation-delay: 0.2s;">
-                    <hr class="bg-primary"/>
+                    <hr class="bg-cb-accent"/>
                     <div class="timeline-middle">
-                        <div class="bg-primary rounded-full p-2">
+                        <div class="bg-cb-accent rounded-full p-2">
                             <i data-lucide="check" class="w-4 h-4 text-white"></i>
                         </div>
                     </div>
-                    <div class="timeline-end timeline-box glass-effect shadow-lg">
+                    <div class="timeline-end timeline-box bg-white shadow-lg border-l-4 border-cb-primary">
                         <div class="flex items-center gap-2 mb-2">
-                            <i data-lucide="code" class="w-5 h-5 text-secondary"></i>
-                            <h3 class="font-bold text-lg">Desarrollo de API</h3>
+                            <i data-lucide="code" class="w-5 h-5 text-cb-primary"></i>
+                            <h3 class="font-bold text-lg text-cb-primary">Desarrollo de Arquitectura</h3>
                         </div>
-                        <time class="font-mono text-sm text-gray-500">Octubre, 2025</time>
-                        <p class="mt-2 text-gray-600">Implementación de endpoints y arquitectura hexagonal. Integración con IntegraApp API.</p>
+                        <time class="font-mono text-sm text-cb-accent font-semibold">Octubre, 2025</time>
+                        <p class="mt-2 text-cb-primary/70">Implementación de arquitectura hexagonal, desarrollo de endpoints y integración con sistemas existentes.</p>
                     </div>
-                    <hr class="bg-secondary"/>
+                    <hr class="bg-cb-primary"/>
                 </li>
                 
                 <li class="animate__animated animate__fadeInLeft" style="animation-delay: 0.4s;">
-                    <hr class="bg-secondary"/>
-                    <div class="timeline-start timeline-box glass-effect shadow-lg">
+                    <hr class="bg-cb-primary"/>
+                    <div class="timeline-start timeline-box bg-white shadow-lg border-l-4 border-cb-accent">
                         <div class="flex items-center gap-2 mb-2">
-                            <i data-lucide="test-tube" class="w-5 h-5 text-accent"></i>
-                            <h3 class="font-bold text-lg">Interfaz de Pruebas</h3>
+                            <i data-lucide="test-tube" class="w-5 h-5 text-cb-accent"></i>
+                            <h3 class="font-bold text-lg text-cb-primary">Validación y Pruebas</h3>
                         </div>
-                        <time class="font-mono text-sm text-gray-500">Octubre, 2025</time>
-                        <p class="mt-2 text-gray-600">Desarrollo de interfaz web para validación de servicios y pruebas de endpoints.</p>
+                        <time class="font-mono text-sm text-cb-accent font-semibold">Octubre, 2025</time>
+                        <p class="mt-2 text-cb-primary/70">Desarrollo de interfaz de validación de servicios y pruebas exhaustivas de todos los endpoints.</p>
                     </div>
                     <div class="timeline-middle">
-                        <div class="bg-accent rounded-full p-2">
+                        <div class="bg-cb-accent rounded-full p-2">
                             <i data-lucide="check" class="w-4 h-4 text-white"></i>
                         </div>
                     </div>
-                    <hr class="bg-accent"/>
+                    <hr class="bg-cb-accent"/>
                 </li>
                 
                 <li class="animate__animated animate__fadeInRight" style="animation-delay: 0.6s;">
-                    <hr class="bg-accent"/>
+                    <hr class="bg-cb-accent"/>
                     <div class="timeline-middle">
-                        <div class="bg-info rounded-full p-2 animate__animated animate__pulse animate__infinite">
+                        <div class="bg-cb-primary rounded-full p-2 animate__animated animate__pulse animate__infinite">
                             <i data-lucide="loader" class="w-4 h-4 text-white"></i>
                         </div>
                     </div>
-                    <div class="timeline-end timeline-box glass-effect shadow-lg border-2 border-info">
+                    <div class="timeline-end timeline-box bg-white shadow-lg border-l-4 border-cb-primary border-2">
                         <div class="flex items-center gap-2 mb-2">
-                            <i data-lucide="rocket" class="w-5 h-5 text-info"></i>
-                            <h3 class="font-bold text-lg">Próximos Pasos</h3>
+                            <i data-lucide="rocket" class="w-5 h-5 text-cb-primary"></i>
+                            <h3 class="font-bold text-lg text-cb-primary">Implementación de IA</h3>
                         </div>
-                        <time class="font-mono text-sm text-gray-500">En progreso</time>
-                        <p class="mt-2 text-gray-600">Implementación de funcionalidades de IA y optimización del sistema.</p>
+                        <time class="font-mono text-sm text-cb-accent font-semibold">En progreso</time>
+                        <p class="mt-2 text-cb-primary/70">Integración de capacidades de IA avanzadas, optimización del sistema y preparación para producción.</p>
                     </div>
                 </li>
             </ul>
@@ -273,65 +324,94 @@
     <!-- Contacto Section -->
     <section id="contacto" class="py-20 px-4">
         <div class="container mx-auto max-w-4xl">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 gradient-text animate__animated animate__fadeInUp">
-                Contacto
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 text-cb-primary animate__animated animate__fadeInUp">
+                Información del Proyecto
             </h2>
-            <p class="text-center text-gray-600 mb-16 text-lg animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
-                ¿Tienes preguntas? Estamos aquí para ayudarte
+            <p class="text-center text-cb-primary/70 mb-16 text-lg animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+                Detalles y recursos del proyecto CECAPTA
             </p>
             
-            <div class="card bg-base-100 shadow-2xl glass-effect animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+            <div class="card bg-white shadow-2xl border-t-4 border-cb-accent animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
                 <div class="card-body">
                     <div class="grid md:grid-cols-2 gap-8">
                         <div>
-                            <h3 class="text-2xl font-bold mb-6">Información</h3>
+                            <h3 class="text-2xl font-bold mb-6 text-cb-primary">Cliente</h3>
                             <div class="space-y-4">
                                 <div class="flex items-start gap-3">
-                                    <div class="bg-primary/10 p-2 rounded-lg">
-                                        <i data-lucide="building" class="w-5 h-5 text-primary"></i>
+                                    <div class="bg-cb-accent/10 p-2 rounded-lg">
+                                        <i data-lucide="building" class="w-5 h-5 text-cb-accent"></i>
                                     </div>
                                     <div>
-                                        <p class="font-semibold">Empresa</p>
-                                        <p class="text-gray-600">CECAPTA</p>
+                                        <p class="font-semibold text-cb-primary">Empresa</p>
+                                        <p class="text-cb-primary/70">CECAPTA</p>
                                     </div>
                                 </div>
                                 <div class="flex items-start gap-3">
-                                    <div class="bg-secondary/10 p-2 rounded-lg">
-                                        <i data-lucide="mail" class="w-5 h-5 text-secondary"></i>
+                                    <div class="bg-cb-accent/10 p-2 rounded-lg">
+                                        <i data-lucide="calendar" class="w-5 h-5 text-cb-accent"></i>
                                     </div>
                                     <div>
-                                        <p class="font-semibold">Email</p>
-                                        <p class="text-gray-600">contacto@cecapta.com</p>
+                                        <p class="font-semibold text-cb-primary">Fecha de Inicio</p>
+                                        <p class="text-cb-primary/70">15 de Octubre, 2025</p>
                                     </div>
                                 </div>
                                 <div class="flex items-start gap-3">
-                                    <div class="bg-accent/10 p-2 rounded-lg">
-                                        <i data-lucide="globe" class="w-5 h-5 text-accent"></i>
+                                    <div class="bg-cb-accent/10 p-2 rounded-lg">
+                                        <i data-lucide="activity" class="w-5 h-5 text-cb-accent"></i>
                                     </div>
                                     <div>
-                                        <p class="font-semibold">Sitio Web</p>
-                                        <p class="text-gray-600">cecapta.callblasterai.com</p>
+                                        <p class="font-semibold text-cb-primary">Estado</p>
+                                        <p class="text-cb-primary/70">En Desarrollo Activo</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         <div>
-                            <h3 class="text-2xl font-bold mb-6">Accesos Rápidos</h3>
-                            <div class="space-y-3">
-                                <a href="/api_tests" class="btn btn-outline btn-primary w-full justify-start">
-                                    <i data-lucide="test-tube-2" class="w-5 h-5"></i>
-                                    Pruebas de API
-                                </a>
-                                <a href="https://github.com/andreserz/cecapta" target="_blank" class="btn btn-outline btn-secondary w-full justify-start">
-                                    <i data-lucide="github" class="w-5 h-5"></i>
-                                    Repositorio GitHub
-                                </a>
-                                <a href="#timeline" class="btn btn-outline btn-accent w-full justify-start">
-                                    <i data-lucide="calendar" class="w-5 h-5"></i>
-                                    Ver Timeline
-                                </a>
+                            <h3 class="text-2xl font-bold mb-6 text-cb-primary">Sobre Call Blaster AI</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-start gap-3">
+                                    <div class="bg-cb-primary/10 p-2 rounded-lg">
+                                        <i data-lucide="globe" class="w-5 h-5 text-cb-primary"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-cb-primary">Sitio Web</p>
+                                        <a href="https://callblasterai.com" target="_blank" class="text-cb-accent hover:underline">callblasterai.com</a>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div class="bg-cb-primary/10 p-2 rounded-lg">
+                                        <i data-lucide="award" class="w-5 h-5 text-cb-primary"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-cb-primary">Especialidad</p>
+                                        <p class="text-cb-primary/70">Líderes en México en soluciones de IA para atención al cliente</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div class="bg-cb-primary/10 p-2 rounded-lg">
+                                        <i data-lucide="users" class="w-5 h-5 text-cb-primary"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-cb-primary">Desarrollado por</p>
+                                        <a href="https://www.zayfex.com" target="_blank" class="text-cb-accent hover:underline">ZayFex</a>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="text-center">
+                        <p class="text-cb-primary/70 mb-4">
+                            Especialistas en soluciones de atención al cliente para pequeñas, medianas y grandes empresas
+                        </p>
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <div class="badge badge-lg bg-cb-primary text-white border-0">Ventas</div>
+                            <div class="badge badge-lg bg-cb-accent text-white border-0">Cobranza</div>
+                            <div class="badge badge-lg bg-cb-primary text-white border-0">Soporte</div>
+                            <div class="badge badge-lg bg-cb-accent text-white border-0">Atención 24/7</div>
                         </div>
                     </div>
                 </div>
@@ -340,25 +420,26 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer footer-center p-10 bg-gradient-to-br from-gray-800 to-gray-900 text-white">
+    <footer class="footer footer-center p-10 bg-gradient-to-br from-cb-primary to-cb-secondary text-white">
         <aside>
             <img src="img/Logo_Claro_Trans.png" alt="Call Blaster AI" class="h-16 w-auto mb-4">
             <p class="font-bold text-xl">
                 Call Blaster AI
             </p> 
-            <p class="text-gray-400">Desarrollado para CECAPTA</p>
-            <p class="text-gray-500 text-sm">Copyright © 2025 - Todos los derechos reservados</p>
+            <p class="text-white/80">Proyecto desarrollado para CECAPTA</p>
+            <p class="text-white/60 text-sm">© 2025 Call Blaster AI - Todos los derechos reservados</p>
+            <p class="text-white/60 text-sm">Creado por <a href="https://www.zayfex.com" target="_blank" class="text-cb-accent hover:underline">ZayFex</a></p>
         </aside> 
         <nav>
             <div class="grid grid-flow-col gap-4">
-                <a href="https://github.com/andreserz/cecapta" target="_blank" class="hover:text-primary transition-colors">
-                    <i data-lucide="github" class="w-6 h-6"></i>
+                <a href="https://callblasterai.com" target="_blank" class="hover:text-cb-accent transition-colors" title="Sitio Web">
+                    <i data-lucide="globe" class="w-6 h-6"></i>
                 </a>
-                <a href="#inicio" class="hover:text-primary transition-colors">
+                <a href="#inicio" class="hover:text-cb-accent transition-colors" title="Inicio">
                     <i data-lucide="home" class="w-6 h-6"></i>
                 </a>
-                <a href="/api_tests" class="hover:text-primary transition-colors">
-                    <i data-lucide="test-tube" class="w-6 h-6"></i>
+                <a href="#servicios" class="hover:text-cb-accent transition-colors" title="Servicios">
+                    <i data-lucide="briefcase" class="w-6 h-6"></i>
                 </a>
             </div>
         </nav>
