@@ -1,0 +1,23 @@
+[
+    {
+        "idBd": 24,
+        "nombre": "CENTRO DE CAPACITACION PROFESIONAL DEL GOLFO",
+        "alias": "CECAPTA",
+        "estatus": "ACTIVO",
+        "isActiva": true
+    },
+    {
+        "idBd": 35,
+        "nombre": "INSTITUTO DE SEGURIDAD MARITIMA",
+        "alias": "ISM",
+        "estatus": "ACTIVO",
+        "isActiva": true
+    },
+    {
+        "idBd": 34,
+        "nombre": "MEDICINA PREVENTIVA Y SALUD LABORAL",
+        "alias": "MEDICINA PREVENTIVA",
+        "estatus": "ACTIVO",
+        "isActiva": true
+    }
+]
