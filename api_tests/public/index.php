@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['access_key'])) {
 // Procesar logout
 if (isset($_GET['logout'])) {
     session_destroy();
-    header('Location: pruebas.php');
+    header('Location: /');
     exit;
 }
 
