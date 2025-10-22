@@ -380,7 +380,22 @@ function validarRespuestaActual() {
     const respuestaGuardada = estado.respuestas[estado.preguntaActual];
     const valorFinal = valor || respuestaGuardada || '';
     
-    // Validar campo vacío
+    // Si dependencia_previa es null, la pregunta es OPCIONAL (puede saltarse)
+    if (pregunta.dependencia_previa === null) {
+        // Solo validar URL si hay contenido
+        if (valorFinal && pregunta.tipo === 'url') {
+            try {
+                new URL(valorFinal);
+            } catch (e) {
+                mostrarError('Por favor ingresa una URL válida (ejemplo: https://ejemplo.com)');
+                input.focus();
+                return false;
+            }
+        }
+        return true; // Permitir avanzar sin responder
+    }
+    
+    // Si dependencia_previa es "Activo", la pregunta es OBLIGATORIA
     if (!valorFinal.trim()) {
         mostrarError('Por favor completa este campo antes de continuar');
         input.focus();
