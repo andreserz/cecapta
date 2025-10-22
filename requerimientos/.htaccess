@@ -1,0 +1,37 @@
+# ========================================
+# Configuración de Caché para Mobile Fix
+# ========================================
+
+# Deshabilitar caché para HTML y PHP (desarrollo)
+<FilesMatch "\.(html|php)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>
+
+# Deshabilitar caché para archivos JavaScript
+<FilesMatch "\.(js)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>
+
+# Permitir caché para imágenes y fuentes (optimización)
+<FilesMatch "\.(jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "public, max-age=86400"
+</FilesMatch>
+
+# Habilitar compresión GZIP
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Prevenir listado de directorios
+Options -Indexes
+
+# Seguridad adicional
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>

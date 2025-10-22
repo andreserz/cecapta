@@ -9,6 +9,8 @@ Sistema de wizard (asistente paso a paso) para configurar chatbots de IA sin con
 - ✅ **Tema oscuro** con paleta de colores naranja corporativa
 - ✅ **Validación en tiempo real** de todos los campos
 - ✅ **Almacenamiento histórico** en archivos JSON con timestamp
+- ✅ **Sistema de backup automático** con versionamiento
+- ✅ **Notificaciones por correo** en entregas finales
 - ✅ **Navegación intuitiva** con teclado y mouse
 - ✅ **Feedback visual** de progreso y completitud
 
@@ -35,13 +37,16 @@ El wizard recopila los siguientes datos en 7 pasos:
 ## 📁 Estructura de Archivos
 
 ```
-dashboard/
+requerimientos/
 ├── index.php              # Interfaz principal del wizard
 ├── guardar.php           # Endpoint backend para guardar configuraciones
 ├── script.js             # Lógica JavaScript del wizard
-├── respuestas/           # Directorio de almacenamiento (permisos 755)
-│   ├── NGINX_CONFIG.md   # Instrucciones de configuración Nginx
-│   └── respuestas_*.json # Archivos de configuración guardados
+├── preguntas/            # Configuración de preguntas
+│   ├── requirements.json # Definición de preguntas del wizard
+│   └── backups/          # Backups con timestamp
+│       └── requirements_YYYYmmDD_HHMMSS.json
+├── respuestas/           # Directorio de almacenamiento legacy (permisos 755)
+│   └── respuestas_*.json # Archivos de respuestas guardadas
 └── README.md             # Esta documentación
 ```
 
@@ -52,7 +57,8 @@ dashboard/
 - **PHP**: 8.3+
 - **Nginx**: Configurado para procesar PHP
 - **Extensiones PHP**: json, mbstring, filter
-- **Permisos**: El directorio `respuestas/` debe tener permisos de escritura (755)
+- **Función PHP mail()**: Habilitada para notificaciones
+- **Permisos**: Directorios `respuestas/` y `preguntas/backups/` con permisos de escritura (755)
 
 ### Configuración de Nginx
 
@@ -60,13 +66,22 @@ Para proteger los archivos JSON de acceso público directo, agrega a tu configur
 
 ```nginx
 # Denegar acceso directo a archivos JSON
-location ~ ^/dashboard/respuestas/.*\.json$ {
+location ~ ^/requerimientos/respuestas/.*\.json$ {
     deny all;
     return 403;
 }
 
-# O denegar acceso completo al directorio
-location /dashboard/respuestas/ {
+location ~ ^/requerimientos/preguntas/.*\.json$ {
+    deny all;
+    return 403;
+}
+
+# O denegar acceso completo a los directorios
+location /requerimientos/respuestas/ {
+    deny all;
+}
+
+location /requerimientos/preguntas/ {
     deny all;
 }
 ```
@@ -80,21 +95,91 @@ sudo systemctl reload nginx
 ### Verificar Permisos
 
 ```bash
-# Verificar permisos del directorio
-ls -la dashboard/respuestas/
+# Verificar permisos de los directorios
+ls -la requerimientos/respuestas/
+ls -la requerimientos/preguntas/
 
 # Si es necesario, ajustar permisos
-chmod 755 dashboard/respuestas/
-chown www-data:www-data dashboard/respuestas/  # Ajusta según tu usuario web
+chmod 755 requerimientos/respuestas/
+chmod 755 requerimientos/preguntas/backups/
+chown www-data:www-data requerimientos/respuestas/
+chown www-data:www-data requerimientos/preguntas/backups/
 ```
 
 ## 💾 Formato de Datos Guardados
 
-Cada configuración se guarda en un archivo JSON con el siguiente formato:
+### Archivo de Preguntas (`preguntas/requirements.json`)
+
+Define las preguntas del wizard:
+
+```json
+[
+  {
+    "titulo": "¿Cuál es el nombre de tu empresa?",
+    "tipo": "text",
+    "placeholder": "Ej: CallBlaster AI",
+    "nombre": "nombre_empresa",
+    "maxlength": 200,
+    "valor_defecto": "CECAPTA"
+  }
+]
+```
+
+#### Campos Soportados
+
+- **titulo**: Texto de la pregunta (requerido)
+- **tipo**: `text`, `textarea`, `select`, `url` (requerido)
+- **nombre**: Identificador único del campo (requerido)
+- **placeholder**: Texto de ayuda (opcional)
+- **maxlength**: Longitud máxima (opcional, por defecto 500)
+- **opciones**: Array de opciones para tipo `select` (requerido para select)
+- **valor_defecto**: Valor inicial (opcional)
+- **dependencia_previa**: Objeto de dependencia condicional (opcional)
+
+#### Dependencias entre Preguntas
+
+El campo `dependencia_previa` permite crear flujos condicionales:
 
 ```json
 {
-  "fecha_guardado": "2025-10-20 06:30:15",
+  "titulo": "Proporciona la URL de tu sitio web",
+  "tipo": "url",
+  "nombre": "url_website",
+  "dependencia_previa": {
+    "campo": "tiene_website",
+    "condicion": "valor_especifico",
+    "valor": "Sí",
+    "mensaje_error": "Primero debes indicar que tienes un sitio web"
+  }
+}
+```
+
+**Condiciones disponibles:**
+
+1. **no_vacio**: El campo anterior debe tener contenido
+2. **valor_especifico**: El campo debe ser igual a `valor`
+3. **contiene**: El campo debe contener el texto en `valor`
+4. **mayor_que**: El campo debe tener longitud mayor que `valor`
+
+**Comportamiento:**
+- Sin dependencia: navegación normal
+- Dependencia cumplida: permite avanzar
+- Dependencia NO cumplida: bloquea botón "Siguiente" y muestra error
+- La navegación hacia atrás siempre es libre
+
+### Archivo de Respuestas
+
+Cada configuración se guarda en dos ubicaciones:
+
+1. **Legacy** (`respuestas/respuestas_YYYYmmDD_HHMMSS.json`)
+2. **Backup** (`preguntas/backups/requirements_YYYYmmDD_HHMMSS.json`)
+
+Formato:
+
+```json
+{
+  "fecha_guardado": "2025-10-22 03:15:30",
+  "modo": "final",
   "respuestas": {
     "nombre_empresa": "CallBlaster AI",
     "objetivo_chatbot": "Atender dudas frecuentes de clientes...",
@@ -107,7 +192,9 @@ Cada configuración se guarda en un archivo JSON con el siguiente formato:
 }
 ```
 
-**Nombre del archivo**: `respuestas_YYYY-MM-DD_HH-MM-SS.json`
+**Modos de guardado**:
+- `backup`: Guardado temporal (botón "Guardar para después")
+- `final`: Entrega final (botón "Finalizar y enviar" + notificación por correo)
 
 ## 🎨 Diseño y UX
 
@@ -127,7 +214,7 @@ Cada configuración se guarda en un archivo JSON con el siguiente formato:
 
 ### Navegación
 
-- **Mouse**: Botones "Anterior" y "Siguiente"/"Finalizar"
+- **Mouse**: Botones "Anterior", "Siguiente", "Guardar para después", "Finalizar y enviar"
 - **Teclado**:
   - `Enter`: Avanzar al siguiente paso (en campos de texto)
   - `Shift + Enter`: Retroceder al paso anterior
@@ -151,102 +238,110 @@ Cada configuración se guarda en un archivo JSON con el siguiente formato:
 - Longitudes máximas aplicadas según tipo de campo
 - Prevención de inyección con sanitización
 
-## 🧪 Testing
+## 📧 Notificaciones por Correo
 
-### Pruebas Básicas
+Al usar "Finalizar y enviar", se envía un correo automático a:
+- ozeamartinez@gmail.com
+- andres.reyes.zamorategui@gmail.com
 
-1. **Navegación**: Verificar que se pueda avanzar y retroceder entre pasos
-2. **Validación**: Intentar avanzar con campos vacíos (debe mostrar error)
-3. **URL**: Probar con URLs inválidas en el último paso
-4. **Guardado**: Completar wizard y verificar archivo JSON creado
-5. **Responsive**: Probar en diferentes tamaños de pantalla
-
-### Navegadores Soportados
-
-- Chrome (últimas 2 versiones)
-- Firefox (últimas 2 versiones)
-- Safari (últimas 2 versiones)
-- Edge (últimas 2 versiones)
+El correo incluye:
+- Nombre de la empresa
+- Fecha y hora de entrega
+- Resumen de los datos principales
+- Nombre del archivo de backup generado
 
 ## 📝 Uso
 
 ### Flujo Normal
 
-1. Accede a `/dashboard/`
+1. Accede a `/requerimientos/`
 2. Responde cada pregunta del wizard
 3. Navega con "Siguiente" o Enter
 4. Retrocede con "Anterior" si necesitas cambiar respuestas
-5. En el último paso, haz clic en "Finalizar"
+5. En el último paso:
+   - **Guardar para después**: Crea backup sin notificación
+   - **Finalizar y enviar**: Crea backup + envía notificación por correo
 6. Espera el mensaje de confirmación
 7. Opcionalmente, crea una nueva configuración
 
 ### Gestión de Archivos
 
-Los archivos JSON guardados se acumulan en `respuestas/`. Para gestión:
+Los archivos JSON guardados se acumulan en dos ubicaciones. Para gestión:
 
 ```bash
 # Listar configuraciones guardadas
-ls -lh dashboard/respuestas/*.json
+ls -lh requerimientos/respuestas/*.json
+ls -lh requerimientos/preguntas/backups/*.json
 
 # Ver contenido de una configuración
-cat dashboard/respuestas/respuestas_2025-10-20_06-30-15.json
+cat requerimientos/preguntas/backups/requirements_20251022_031530.json
 
-# Eliminar configuraciones antiguas (manual)
-find dashboard/respuestas/ -name "*.json" -mtime +30 -delete  # >30 días
+# Eliminar backups antiguos (manual)
+find requerimientos/preguntas/backups/ -name "*.json" -mtime +30 -delete  # >30 días
+```
+
+### Editar Preguntas del Wizard
+
+Para modificar las preguntas del wizard, edita el archivo:
+
+```bash
+nano requerimientos/preguntas/requirements.json
+```
+
+Formato de cada pregunta:
+```json
+{
+  "titulo": "Texto de la pregunta",
+  "tipo": "text|textarea|select|url",
+  "placeholder": "Texto de ejemplo",
+  "nombre": "nombre_campo",
+  "maxlength": 500,
+  "valor_defecto": "Valor inicial (opcional)",
+  "opciones": ["Opción 1", "Opción 2"]  // Solo para tipo select
+}
 ```
 
 ## 🐛 Solución de Problemas
 
-### Error: "No se pudo crear el directorio de respuestas"
+### Error: "No se encontró el archivo de preguntas"
 
-**Solución**: Verificar permisos del directorio padre
+**Solución**: Verificar que existe `preguntas/requirements.json`
 ```bash
-chmod 755 dashboard/
+ls -la requerimientos/preguntas/requirements.json
 ```
 
-### Error: "El directorio de respuestas no tiene permisos de escritura"
+### Error: "No se pudo crear el directorio de backups"
 
-**Solución**: Ajustar permisos del directorio
+**Solución**: Verificar permisos del directorio
 ```bash
-chmod 755 dashboard/respuestas/
-chown www-data:www-data dashboard/respuestas/
+chmod 755 requerimientos/preguntas/
+mkdir -p requerimientos/preguntas/backups
+chmod 755 requerimientos/preguntas/backups/
 ```
 
-### Error: Los archivos JSON no se guardan
+### El correo no se envía
 
 **Diagnóstico**:
-1. Verificar que PHP puede escribir: `php -i | grep "file_uploads"`
-2. Verificar `post_max_size` en php.ini (debe ser >= 2MB)
-3. Revisar logs de PHP: `tail -f /var/log/php8.3-fpm.log`
-
-### La interfaz no se ve correctamente
-
-**Solución**: Verificar que los CDNs están cargando
-1. Abrir DevTools (F12)
-2. Revisar pestaña Network
-3. Verificar que Tailwind CSS y daisyUI cargan correctamente
-4. Si CDN falla, considerar copias locales
-
-### Error: "Método no permitido"
-
-**Causa**: Intento de acceder a `guardar.php` con GET
-**Solución**: Solo usar desde el wizard (POST automático)
+1. Verificar que la función `mail()` está habilitada en PHP
+2. Revisar logs de mail: `tail -f /var/log/mail.log`
+3. Configurar SMTP si es necesario
 
 ## 📊 Monitoreo
 
 ### Verificar Espacio en Disco
 
 ```bash
-# Ver espacio usado por configuraciones
-du -sh dashboard/respuestas/
+# Ver espacio usado por backups
+du -sh requerimientos/preguntas/backups/
+du -sh requerimientos/respuestas/
 
 # Ver número de configuraciones
-ls dashboard/respuestas/*.json | wc -l
+ls requerimientos/preguntas/backups/*.json | wc -l
 ```
 
 ### Logs
 
-Los errores se registran en el log de PHP. Para ver:
+Los errores se registran en el log de PHP:
 
 ```bash
 # Log de PHP-FPM
@@ -267,10 +362,10 @@ Para actualizar el wizard:
 
 ```bash
 # Backup
-cp -r dashboard/ dashboard_backup_$(date +%Y%m%d)/
+cp -r requerimientos/ requerimientos_backup_$(date +%Y%m%d)/
 
 # Después de actualizar, verificar
-ls -la dashboard/
+ls -la requerimientos/
 ```
 
 ## 📞 Soporte
@@ -288,6 +383,6 @@ Este proyecto es propiedad de CECAPTA.
 
 ---
 
-**Versión**: 1.0.0  
+**Versión**: 2.0.0  
 **Última actualización**: Octubre 2025  
 **Stack**: PHP 8.3, HTML5, Tailwind CSS, daisyUI, JavaScript ES6+

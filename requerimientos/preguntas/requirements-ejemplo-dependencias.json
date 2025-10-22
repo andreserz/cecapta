@@ -1,0 +1,47 @@
+[
+    {
+        "titulo": "¿Cuál es el nombre de tu empresa?",
+        "tipo": "text",
+        "placeholder": "Ejemplo: Empresa S.A de C.V.",
+        "nombre": "nombre_empresa",
+        "maxlength": 200,
+        "valor_defecto": "CECAPTA"
+    },
+    {
+        "titulo": "¿Tu empresa tiene sitio web?",
+        "tipo": "select",
+        "nombre": "tiene_website",
+        "opciones": ["Sí", "No", "En desarrollo"]
+    },
+    {
+        "titulo": "Proporciona la URL de tu página web",
+        "tipo": "url",
+        "placeholder": "https://ejemplo.com",
+        "nombre": "url_website",
+        "maxlength": 500,
+        "dependencia_previa": {
+            "campo": "tiene_website",
+            "condicion": "valor_especifico",
+            "valor": "Sí",
+            "mensaje_error": "Debes indicar primero que tienes un sitio web activo"
+        }
+    },
+    {
+        "titulo": "¿Cuál es el objetivo principal del chatbot?",
+        "tipo": "select",
+        "nombre": "objetivo_principal",
+        "opciones": ["Atención al cliente", "Ventas", "Soporte técnico", "Información general"]
+    },
+    {
+        "titulo": "Describe los casos de uso específicos",
+        "tipo": "textarea",
+        "placeholder": "Ejemplo: CU01: Como cliente, necesito consultar horarios...",
+        "nombre": "casos_uso",
+        "maxlength": 2000,
+        "dependencia_previa": {
+            "campo": "objetivo_principal",
+            "condicion": "no_vacio",
+            "mensaje_error": "Primero debes seleccionar el objetivo principal del chatbot"
+        }
+    }
+]

@@ -1,0 +1,14 @@
+# Credenciales y configuración sensible
+config/email.php
+
+# Dependencias de Composer
+vendor/
+composer.lock
+
+# Archivos de respuestas y backups
+respuestas/*.json
+preguntas/backups/*.json
+!preguntas/backups/.gitkeep
+
+# Logs
+*.log

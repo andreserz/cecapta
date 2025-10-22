@@ -1,0 +1,52 @@
+[
+    {
+        "titulo": "¿Cuál es el nombre de tu empresa?",
+        "tipo": "text",
+        "placeholder": "Ej: CallBlaster AI",
+        "nombre": "nombre_empresa",
+        "maxlength": 200,
+        "valor_defecto": "CECAPTA"
+    },
+    {
+        "titulo": "Describe brevemente el objetivo principal de tu chatbot",
+        "tipo": "textarea",
+        "placeholder": "Ej: Atender dudas frecuentes de clientes sobre nuestros productos y servicios, proporcionar información sobre horarios y ubicaciones...",
+        "nombre": "objetivo_chatbot",
+        "maxlength": 1000
+    },
+    {
+        "titulo": "¿Cuál es el tono de comunicación deseado?",
+        "tipo": "select",
+        "placeholder": "Selecciona una opción",
+        "nombre": "tono_comunicacion",
+        "opciones": ["Formal", "Amigable", "Divertido", "Profesional"]
+    },
+    {
+        "titulo": "Menciona 3 preguntas frecuentes que debe saber responder",
+        "tipo": "textarea",
+        "placeholder": "1. ¿Cuáles son los horarios de atención?\n2. ¿Dónde están ubicados?\n3. ¿Qué servicios ofrecen?",
+        "nombre": "preguntas_frecuentes",
+        "maxlength": 2000
+    },
+    {
+        "titulo": "¿Cuál es el horario de atención?",
+        "tipo": "text",
+        "placeholder": "Ej: Lunes a Viernes de 9am a 6pm",
+        "nombre": "horario_atencion",
+        "maxlength": 200
+    },
+    {
+        "titulo": "¿Cómo debe despedirse el chatbot?",
+        "tipo": "text",
+        "placeholder": "Ej: ¡Estoy para servirte! ¡Que tengas un excelente día!",
+        "nombre": "mensaje_despedida",
+        "maxlength": 300
+    },
+    {
+        "titulo": "Proporciona la URL de tu página web",
+        "tipo": "url",
+        "placeholder": "https://ejemplo.com",
+        "nombre": "url_website",
+        "maxlength": 500
+    }
+]

@@ -18,5 +18,5 @@
 - [x] 3.4 Agregar feedback visual para cada acción
 
 ## 4. Documentación
-- [x] 4.1 Actualizar README si existe
+- [x] 4.1 Actualizar README con nueva funcionalidad
 - [x] 4.2 Documentar estructura de archivos JSON
