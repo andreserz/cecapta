@@ -376,8 +376,12 @@ function validarRespuestaActual() {
     const valor = input.value.trim();
     const pregunta = window.preguntasData[estado.preguntaActual];
     
+    // Primero verificar si ya hay respuesta guardada
+    const respuestaGuardada = estado.respuestas[estado.preguntaActual];
+    const valorFinal = valor || respuestaGuardada || '';
+    
     // Validar campo vacío
-    if (!valor) {
+    if (!valorFinal.trim()) {
         mostrarError('Por favor completa este campo antes de continuar');
         input.focus();
         return false;
@@ -386,7 +390,7 @@ function validarRespuestaActual() {
     // Validar URL si es tipo URL
     if (pregunta.tipo === 'url') {
         try {
-            new URL(valor);
+            new URL(valorFinal);
         } catch (e) {
             mostrarError('Por favor ingresa una URL válida (ejemplo: https://ejemplo.com)');
             input.focus();
@@ -402,8 +406,15 @@ function guardarRespuestaActual() {
     const input = document.getElementById('campoRespuesta');
     if (!input) return;
     
-    estado.respuestas[estado.preguntaActual] = input.value.trim();
-    estado.preguntasCompletadas.add(estado.preguntaActual);
+    const valor = input.value.trim();
+    
+    // Solo guardar si hay valor O si ya había un valor guardado
+    if (valor || estado.respuestas[estado.preguntaActual]) {
+        estado.respuestas[estado.preguntaActual] = valor || estado.respuestas[estado.preguntaActual];
+        if (estado.respuestas[estado.preguntaActual].trim()) {
+            estado.preguntasCompletadas.add(estado.preguntaActual);
+        }
+    }
 }
 
 // Navegación anterior
