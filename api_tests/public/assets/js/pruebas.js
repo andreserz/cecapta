@@ -1,6 +1,7 @@
 /**
  * JavaScript para Interfaz de Pruebas de Endpoints
  * Validación de servicios para Call Blaster AI
+ * Actualizado con diseño corporativo CECAPTA
  */
 
 // Renderizar acordeones de pruebas
@@ -8,24 +9,24 @@ function renderTests() {
     const container = document.getElementById('testsContainer');
     container.innerHTML = '';
     
-    tests.forEach(test => {
+    tests.forEach((test, index) => {
         const accordionHTML = `
-            <div id="test-${test.id}" class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+            <div id="test-${test.id}" class="card bg-gray-800 shadow-xl border border-gray-700 fade-enter" style="animation-delay: ${0.2 + (index * 0.05)}s;">
                 <!-- Accordion Header -->
-                <div class="accordion-header flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                <div class="accordion-header flex items-center justify-between p-4 cursor-pointer hover:bg-gray-700 transition-colors rounded-t-lg"
                      onclick="toggleAccordion('${test.id}')">
                     <div class="flex items-center gap-3 flex-1">
-                        <span id="icon-${test.id}" class="text-xl">▶</span>
-                        <h3 class="font-semibold text-gray-800">${test.name}</h3>
+                        <span id="icon-${test.id}" class="text-xl text-orange-500">▶</span>
+                        <h3 class="font-semibold text-gray-100">${test.name}</h3>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <span id="status-${test.id}" class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600">
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <span id="status-${test.id}" class="badge badge-lg bg-gray-700 text-gray-300 border-gray-600">
                             ⚪ Pendiente
                         </span>
                         <button 
                             id="btn-${test.id}"
                             onclick="event.stopPropagation(); runTest('${test.id}')"
-                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium"
+                            class="btn btn-primary-custom btn-sm"
                         >
                             ▶ Ejecutar
                         </button>
@@ -34,8 +35,8 @@ function renderTests() {
                 
                 <!-- Accordion Content -->
                 <div id="content-${test.id}" class="accordion-content">
-                    <div class="p-6 border-t border-gray-200 bg-gray-50">
-                        <div id="result-${test.id}" class="text-gray-600">
+                    <div class="p-6 border-t border-gray-700 bg-gray-900">
+                        <div id="result-${test.id}" class="text-gray-400">
                             <p class="text-sm">Haz clic en "Ejecutar" para realizar la prueba</p>
                         </div>
                     </div>
@@ -67,7 +68,7 @@ async function runTest(testId) {
     
     // Verificar dependencias
     if (test.requires && !testResults[test.requires]?.success) {
-        alert(`Esta prueba requiere que "${tests.find(t => t.id === test.requires).name}" se ejecute primero y sea exitosa.`);
+        showModal('error', 'Dependencia Requerida', `Esta prueba requiere que "${tests.find(t => t.id === test.requires).name}" se ejecute primero y sea exitosa.`);
         return;
     }
     
@@ -99,177 +100,118 @@ async function runTest(testId) {
         // Guardar resultado
         testResults[testId] = result;
         
-        // Actualizar UI con resultado
-        if (result.status === 'success') {
+        // Actualizar UI
+        if (result.success) {
             updateTestState(testId, 'success', result);
         } else {
             updateTestState(testId, 'error', result);
         }
         
     } catch (error) {
-        console.error('Error ejecutando prueba:', error);
+        console.error('Error en prueba:', error);
+        testResults[testId] = {
+            success: false,
+            error: error.message
+        };
         updateTestState(testId, 'error', {
-            error: {
-                message: 'Error de conexión: ' + error.message
-            }
+            success: false,
+            error: `Error de conexión: ${error.message}`
         });
     }
 }
 
-// Actualizar estado de prueba
-function updateTestState(testId, state, data = null) {
+// Actualizar estado visual de la prueba
+function updateTestState(testId, state, result = null) {
     const statusEl = document.getElementById(`status-${testId}`);
-    const resultEl = document.getElementById(`result-${testId}`);
     const btnEl = document.getElementById(`btn-${testId}`);
+    const resultEl = document.getElementById(`result-${testId}`);
     
-    // Actualizar badge de estado
     switch (state) {
         case 'running':
-            statusEl.className = 'px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700';
-            statusEl.innerHTML = '⏳ Ejecutando';
+            statusEl.className = 'badge badge-lg bg-blue-500 text-white border-blue-400';
+            statusEl.innerHTML = '<span class="loading loading-spinner loading-xs mr-1"></span> Ejecutando...';
             btnEl.disabled = true;
-            btnEl.classList.add('opacity-50', 'cursor-not-allowed');
-            
+            btnEl.classList.add('btn-disabled');
             resultEl.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <div class="spinner"></div>
-                    <span class="text-sm text-gray-600">Ejecutando prueba...</span>
+                <div class="flex items-center gap-2 text-blue-400">
+                    <span class="loading loading-spinner loading-sm"></span>
+                    <span>Ejecutando prueba...</span>
                 </div>
             `;
             break;
             
         case 'success':
-            statusEl.className = 'px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700';
-            statusEl.innerHTML = '✅ Exitoso';
+            statusEl.className = 'badge badge-lg badge-success';
+            statusEl.textContent = '✓ Éxito';
             btnEl.disabled = false;
-            btnEl.classList.remove('opacity-50', 'cursor-not-allowed');
-            btnEl.innerHTML = '🔄 Re-ejecutar';
-            
-            resultEl.innerHTML = renderSuccessResult(data);
+            btnEl.classList.remove('btn-disabled');
+            btnEl.textContent = '↻ Repetir';
+            resultEl.innerHTML = renderResult(result);
             break;
             
         case 'error':
-            statusEl.className = 'px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-700';
-            statusEl.innerHTML = '❌ Error';
+            statusEl.className = 'badge badge-lg badge-error';
+            statusEl.textContent = '✗ Error';
             btnEl.disabled = false;
-            btnEl.classList.remove('opacity-50', 'cursor-not-allowed');
-            btnEl.innerHTML = '🔄 Reintentar';
-            
-            resultEl.innerHTML = renderErrorResult(data);
+            btnEl.classList.remove('btn-disabled');
+            btnEl.textContent = '↻ Reintentar';
+            resultEl.innerHTML = renderResult(result);
             break;
     }
 }
 
-// Renderizar resultado exitoso
-function renderSuccessResult(data) {
-    const summary = data.summary || {};
-    const responsePreview = data.response ? JSON.stringify(data.response, null, 2) : '';
+// Renderizar resultado de prueba
+function renderResult(result) {
+    if (!result) return '';
     
-    return `
-        <div class="space-y-4">
-            <div class="flex items-center gap-2 text-green-600">
-                <span class="text-2xl">✓</span>
-                <span class="font-semibold">Prueba completada exitosamente</span>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white p-3 rounded border border-gray-200">
-                    <div class="text-xs text-gray-500 mb-1">Tiempo de Respuesta</div>
-                    <div class="text-lg font-semibold text-gray-800">${data.execution_time?.toFixed(3) || '0.000'}s</div>
-                </div>
-                <div class="bg-white p-3 rounded border border-gray-200">
-                    <div class="text-xs text-gray-500 mb-1">Código HTTP</div>
-                    <div class="text-lg font-semibold text-gray-800">${data.http_code || 'N/A'}</div>
-                </div>
-                <div class="bg-white p-3 rounded border border-gray-200">
-                    <div class="text-xs text-gray-500 mb-1">Timestamp</div>
-                    <div class="text-sm font-medium text-gray-800">${data.timestamp || ''}</div>
-                </div>
-            </div>
-            
-            ${summary.message ? `
-                <div class="bg-blue-50 border border-blue-200 rounded p-3">
-                    <div class="text-sm text-blue-800">
-                        <strong>📊 Resumen:</strong> ${summary.message}
-                    </div>
-                </div>
-            ` : ''}
-            
-            ${summary.ids ? `
-                <div class="bg-green-50 border border-green-200 rounded p-3">
-                    <div class="text-sm text-green-800">
-                        <strong>🔑 IDs Generados:</strong>
-                        <ul class="list-disc list-inside mt-2">
-                            ${Object.entries(summary.ids).map(([key, value]) => 
-                                `<li>${key}: <code class="bg-green-100 px-2 py-1 rounded">${value}</code></li>`
-                            ).join('')}
-                        </ul>
-                    </div>
-                </div>
-            ` : ''}
-            
-            <div>
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-sm font-medium text-gray-700">📋 Respuesta de la API:</span>
-                    <button onclick="copyToClipboard('${escapeForAttribute(responsePreview)}')" 
-                            class="text-xs text-blue-600 hover:text-blue-800">
-                        📋 Copiar
-                    </button>
-                </div>
-                <div class="json-viewer">
-                    <pre>${escapeHtml(responsePreview)}</pre>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// Renderizar resultado con error
-function renderErrorResult(data) {
-    const error = data.error || {};
+    let html = '';
     
-    return `
-        <div class="space-y-4">
-            <div class="flex items-center gap-2 text-red-600">
-                <span class="text-2xl">✗</span>
-                <span class="font-semibold">Error en la ejecución</span>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-white p-3 rounded border border-gray-200">
-                    <div class="text-xs text-gray-500 mb-1">Tiempo de Respuesta</div>
-                    <div class="text-lg font-semibold text-gray-800">${data.execution_time?.toFixed(3) || '0.000'}s</div>
-                </div>
-                <div class="bg-white p-3 rounded border border-gray-200">
-                    <div class="text-xs text-gray-500 mb-1">Timestamp</div>
-                    <div class="text-sm font-medium text-gray-800">${data.timestamp || ''}</div>
-                </div>
-            </div>
-            
-            <div class="bg-red-50 border border-red-200 rounded p-4">
-                <div class="text-sm text-red-800">
-                    <strong>⚠️ Error:</strong>
-                    <p class="mt-2">${escapeHtml(error.message || 'Error desconocido')}</p>
-                </div>
-            </div>
-            
-            ${error.type ? `
-                <div class="bg-gray-50 border border-gray-200 rounded p-3">
-                    <div class="text-xs text-gray-500 mb-1">Tipo de Excepción</div>
-                    <div class="text-sm font-mono text-gray-800">${escapeHtml(error.type)}</div>
-                </div>
-            ` : ''}
-            
-            ${data.details ? `
-                <div>
-                    <div class="text-sm font-medium text-gray-700 mb-2">🔍 Detalles Técnicos:</div>
-                    <div class="json-viewer">
-                        <pre>${escapeHtml(JSON.stringify(data.details, null, 2))}</pre>
-                    </div>
-                </div>
-            ` : ''}
-        </div>
-    `;
+    // Información básica
+    html += '<div class="space-y-4">';
+    
+    // Status y tiempo
+    html += '<div class="flex items-center justify-between flex-wrap gap-2">';
+    html += `<span class="text-sm ${result.success ? 'text-green-400' : 'text-red-400'} font-medium">`;
+    html += result.success ? '✓ Prueba exitosa' : '✗ Prueba fallida';
+    html += '</span>';
+    if (result.duration) {
+        html += `<span class="text-xs text-gray-400">Tiempo: ${result.duration}ms</span>`;
+    }
+    html += '</div>';
+    
+    // Mensaje de error si existe
+    if (result.error) {
+        html += `<div class="alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-sm">${escapeHtml(result.error)}</span>
+        </div>`;
+    }
+    
+    // Datos de respuesta
+    if (result.data) {
+        html += '<div>';
+        html += '<h4 class="text-sm font-semibold text-gray-300 mb-2">Datos de Respuesta:</h4>';
+        html += '<div class="json-viewer text-xs">';
+        html += '<pre>' + JSON.stringify(result.data, null, 2) + '</pre>';
+        html += '</div>';
+        html += '</div>';
+    }
+    
+    // Detalles de request si existen
+    if (result.request) {
+        html += '<details class="collapse collapse-arrow bg-gray-800 border border-gray-700">';
+        html += '<summary class="collapse-title text-sm font-medium text-gray-300">Detalles de Request</summary>';
+        html += '<div class="collapse-content text-xs text-gray-400">';
+        html += '<pre>' + JSON.stringify(result.request, null, 2) + '</pre>';
+        html += '</div>';
+        html += '</details>';
+    }
+    
+    html += '</div>';
+    
+    return html;
 }
 
 // Ejecutar todas las pruebas
@@ -277,118 +219,117 @@ async function runAllTests() {
     if (isRunningAll) return;
     
     isRunningAll = true;
-    const btnRunAll = document.getElementById('btnRunAll');
-    const btnClear = document.getElementById('btnClear');
     const progressContainer = document.getElementById('progressContainer');
     const progressBar = document.getElementById('progressBar');
     const progressText = document.getElementById('progressText');
-    
-    // Deshabilitar botones
-    btnRunAll.disabled = true;
-    btnRunAll.classList.add('opacity-50', 'cursor-not-allowed');
-    btnClear.disabled = true;
-    btnClear.classList.add('opacity-50', 'cursor-not-allowed');
+    const btnRunAll = document.getElementById('btnRunAll');
     
     // Mostrar barra de progreso
     progressContainer.classList.remove('hidden');
+    btnRunAll.disabled = true;
+    btnRunAll.classList.add('btn-disabled');
+    btnRunAll.innerHTML = '<span class="loading loading-spinner"></span><span>Ejecutando...</span>';
     
     let completed = 0;
     const total = tests.length;
     
     for (const test of tests) {
+        await runTest(test.id);
+        completed++;
+        
         // Actualizar progreso
-        progressBar.style.width = `${(completed / total) * 100}%`;
+        const percent = Math.round((completed / total) * 100);
+        progressBar.value = percent;
         progressText.textContent = `${completed} / ${total}`;
         
-        // Ejecutar prueba
-        await runTest(test.id);
-        
-        // Esperar un poco entre pruebas
+        // Pequeña pausa entre pruebas
         await new Promise(resolve => setTimeout(resolve, 500));
-        
-        completed++;
     }
     
-    // Actualizar progreso final
-    progressBar.style.width = '100%';
-    progressText.textContent = `${total} / ${total}`;
-    
-    // Calcular resultados
-    const successful = Object.values(testResults).filter(r => r.status === 'success').length;
-    const failed = Object.values(testResults).filter(r => r.status === 'error').length;
-    
-    // Mostrar resumen
+    // Ocultar barra de progreso
     setTimeout(() => {
-        alert(`✅ Pruebas completadas!\n\nExitosas: ${successful}\nFallidas: ${failed}\nTotal: ${total}`);
-        
-        // Rehabilitar botones
-        btnRunAll.disabled = false;
-        btnRunAll.classList.remove('opacity-50', 'cursor-not-allowed');
-        btnClear.disabled = false;
-        btnClear.classList.remove('opacity-50', 'cursor-not-allowed');
-        
+        progressContainer.classList.add('hidden');
+        progressBar.value = 0;
         isRunningAll = false;
-    }, 500);
+        btnRunAll.disabled = false;
+        btnRunAll.classList.remove('btn-disabled');
+        btnRunAll.innerHTML = '<span>🚀</span><span>Ejecutar Todas las Pruebas</span>';
+        
+        // Mostrar resumen
+        showSummary();
+    }, 1000);
+}
+
+// Mostrar resumen de pruebas
+function showSummary() {
+    const total = tests.length;
+    const executed = Object.keys(testResults).length;
+    const successful = Object.values(testResults).filter(r => r.success).length;
+    const failed = executed - successful;
+    
+    let message = `
+        <div class="space-y-2">
+            <p class="text-lg font-semibold">Resumen de Pruebas</p>
+            <div class="stats stats-vertical lg:stats-horizontal shadow bg-gray-800">
+                <div class="stat">
+                    <div class="stat-title text-gray-400">Total</div>
+                    <div class="stat-value text-gray-100">${total}</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-title text-green-400">Exitosas</div>
+                    <div class="stat-value text-green-500">${successful}</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-title text-red-400">Fallidas</div>
+                    <div class="stat-value text-red-500">${failed}</div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    showModal('info', 'Pruebas Completadas', message);
 }
 
 // Limpiar todos los resultados
 function clearAllResults() {
-    if (!confirm('¿Estás seguro de que quieres limpiar todos los resultados?')) {
-        return;
-    }
-    
     testResults = {};
-    
-    // Cerrar todos los acordeones y resetear estados
-    tests.forEach(test => {
-        const content = document.getElementById(`content-${test.id}`);
-        const icon = document.getElementById(`icon-${test.id}`);
-        const statusEl = document.getElementById(`status-${test.id}`);
-        const resultEl = document.getElementById(`result-${test.id}`);
-        const btnEl = document.getElementById(`btn-${test.id}`);
-        
-        // Cerrar acordeón
-        content.classList.remove('active');
-        icon.textContent = '▶';
-        
-        // Resetear estado
-        statusEl.className = 'px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600';
-        statusEl.innerHTML = '⚪ Pendiente';
-        
-        // Resetear contenido
-        resultEl.innerHTML = '<p class="text-sm">Haz clic en "Ejecutar" para realizar la prueba</p>';
-        
-        // Resetear botón
-        btnEl.disabled = false;
-        btnEl.classList.remove('opacity-50', 'cursor-not-allowed');
-        btnEl.innerHTML = '▶ Ejecutar';
-    });
-    
-    // Ocultar barra de progreso
+    renderTests();
     const progressContainer = document.getElementById('progressContainer');
     progressContainer.classList.add('hidden');
-    document.getElementById('progressBar').style.width = '0%';
-    document.getElementById('progressText').textContent = '0 / 8';
 }
 
-// Copiar al portapapeles
-function copyToClipboard(text) {
-    const decoded = decodeURIComponent(text.replace(/\+/g, ' '));
-    navigator.clipboard.writeText(decoded).then(() => {
-        alert('✅ Copiado al portapapeles');
-    }).catch(err => {
-        console.error('Error al copiar:', err);
-    });
+// Mostrar modal
+function showModal(type, title, message) {
+    const modalHTML = `
+        <dialog id="dynamicModal" class="modal modal-open">
+            <div class="modal-box bg-gray-800">
+                <h3 class="font-bold text-lg mb-4 ${type === 'error' ? 'text-error' : type === 'success' ? 'text-success' : 'text-orange-500'}">
+                    ${escapeHtml(title)}
+                </h3>
+                <div class="py-4 text-gray-300">
+                    ${message}
+                </div>
+                <div class="modal-action">
+                    <button class="btn btn-primary-custom" onclick="document.getElementById('dynamicModal').close(); document.getElementById('dynamicModal').remove();">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+                <button onclick="document.getElementById('dynamicModal').remove();">close</button>
+            </form>
+        </dialog>
+    `;
+    
+    // Agregar modal al body
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = modalHTML;
+    document.body.appendChild(tempDiv.firstElementChild);
 }
 
-// Escapar HTML
+// Escape HTML para prevenir XSS
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
-}
-
-// Escapar para atributo
-function escapeForAttribute(text) {
-    return encodeURIComponent(text);
 }

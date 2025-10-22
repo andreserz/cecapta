@@ -1,0 +1,199 @@
+/**
+ * CECAPTA - Correcciones de Accesibilidad WCAG AA
+ * 
+ * Este archivo contiene mejoras para garantizar contraste adecuado
+ * en todos los componentes del sistema de diseño.
+ */
+
+/* ================================================================
+   CORRECCIONES DE CONTRASTE PARA BADGES Y BOTONES
+   ================================================================ */
+
+/* Badge de Éxito - Fondo más oscuro para mejor contraste */
+.badge-success-wcag {
+  background-color: #059669; /* Verde más oscuro */
+  color: white;
+  border: none;
+}
+
+/* Badge de Error - Mantener (pasa WCAG AA para texto grande) */
+.badge-error-wcag {
+  background-color: #DC2626; /* Rojo más oscuro */
+  color: white;
+  border: none;
+}
+
+/* Badge de Advertencia - Fondo más oscuro */
+.badge-warning-wcag {
+  background-color: #D97706; /* Amarillo más oscuro */
+  color: white;
+  border: none;
+}
+
+/* Botón Primario - Usar texto negro para mejor contraste */
+.btn-primary-custom-wcag {
+  background-color: var(--naranja-primario);
+  border-color: var(--naranja-primario);
+  color: #000000; /* Texto negro cumple WCAG AA (7.49:1) */
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary-custom-wcag:hover {
+  background-color: var(--naranja-hover);
+  border-color: var(--naranja-hover);
+  color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+/* Alternativa: Botón con borde para landing page */
+.btn-primary-outline-wcag {
+  background-color: transparent;
+  border: 2px solid var(--naranja-primario);
+  color: var(--naranja-primario);
+  font-weight: 600;
+}
+
+.btn-primary-outline-wcag:hover {
+  background-color: var(--naranja-primario);
+  color: #000000;
+}
+
+/* ================================================================
+   TEXTO NARANJA SOBRE BLANCO (LANDING PAGE)
+   ================================================================ */
+
+/* Para títulos y elementos decorativos - usar como acento visual */
+.text-accent-decorative {
+  color: var(--naranja-primario);
+  /* Usar solo para texto grande (18px+) o elementos no críticos */
+  font-weight: 600;
+  font-size: 1.125rem; /* 18px mínimo */
+}
+
+/* Para texto crítico en landing - usar gris oscuro con acento naranja */
+.text-primary-landing {
+  color: #1F2937; /* Gris oscuro con excelente contraste */
+}
+
+.text-primary-landing .accent {
+  color: var(--naranja-primario);
+  font-weight: 700;
+  /* Solo para palabras acentuadas, no párrafos completos */
+}
+
+/* ================================================================
+   ESTADOS DE FOCO (ACCESIBILIDAD TECLADO)
+   ================================================================ */
+
+/* Foco visible con alto contraste */
+*:focus-visible {
+  outline: 3px solid var(--naranja-primario);
+  outline-offset: 3px;
+  border-radius: 0.25rem;
+}
+
+/* Foco en tema claro */
+.theme-light *:focus-visible {
+  outline: 3px solid #D97706; /* Naranja más oscuro */
+  outline-offset: 3px;
+}
+
+/* ================================================================
+   MEJORAS DE LEGIBILIDAD
+   ================================================================ */
+
+/* Asegurar peso de fuente suficiente para texto pequeño */
+.text-accessible {
+  font-weight: 500; /* Medium weight */
+  line-height: 1.6;
+}
+
+/* Texto pequeño sobre fondos de color */
+.small-text-on-color {
+  font-weight: 600;
+  font-size: 0.875rem; /* 14px mínimo */
+}
+
+/* ================================================================
+   ALTERNATIVAS PARA BADGES
+   ================================================================ */
+
+/* Badges con borde para mejor visibilidad */
+.badge-outline-success {
+  background-color: transparent;
+  border: 2px solid #059669;
+  color: #059669;
+  font-weight: 600;
+}
+
+.badge-outline-error {
+  background-color: transparent;
+  border: 2px solid #DC2626;
+  color: #DC2626;
+  font-weight: 600;
+}
+
+.badge-outline-warning {
+  background-color: transparent;
+  border: 2px solid #D97706;
+  color: #D97706;
+  font-weight: 600;
+}
+
+/* ================================================================
+   MODO ALTO CONTRASTE (OPCIONAL)
+   ================================================================ */
+
+@media (prefers-contrast: high) {
+  :root {
+    --naranja-primario: #EA580C; /* Naranja más oscuro */
+    --naranja-hover: #C2410C;
+  }
+  
+  .btn-primary-custom,
+  .btn-primary-custom-wcag {
+    border-width: 2px;
+    font-weight: 700;
+  }
+  
+  .badge {
+    border-width: 2px;
+    font-weight: 700;
+  }
+}
+
+/* ================================================================
+   UTILIDADES WCAG
+   ================================================================ */
+
+/* Ocultar visualmente pero mantener para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip to main content link */
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  z-index: 999;
+  padding: 1rem;
+  background-color: var(--naranja-primario);
+  color: #000000;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.skip-to-main:focus {
+  left: 0;
+  top: 0;
+}

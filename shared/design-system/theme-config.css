@@ -1,0 +1,405 @@
+/**
+ * CECAPTA CallBlaster AI - Theme Configuration
+ * Variables CSS corporativas para el sistema de diseño unificado
+ * 
+ * Incluir este archivo después de DaisyUI y Tailwind CSS
+ */
+
+:root {
+  /* ========================================
+     COLORES CORPORATIVOS
+     ======================================== */
+  
+  /* Naranja Primario */
+  --naranja-primario: #F97316;
+  --naranja-hover: #EA580C;
+  --naranja-claro: #FDBA74;
+  
+  /* Fondos Oscuros */
+  --fondo-oscuro: #111827;
+  --fondo-secundario: #1F2937;
+  --fondo-terciario: #374151;
+  
+  /* Estados */
+  --completado: #10B981;
+  --error: #EF4444;
+  --warning: #F59E0B;
+  --info: #3B82F6;
+  
+  /* Texto */
+  --texto-principal: #F9FAFB;
+  --texto-secundario: #E5E7EB;
+  --texto-deshabilitado: #9CA3AF;
+}
+
+/* ========================================
+   COMPONENTES PERSONALIZADOS
+   ======================================== */
+
+/* Botón Primario Corporativo */
+.btn-primary-custom {
+  background-color: var(--naranja-primario);
+  border-color: var(--naranja-primario);
+  color: white;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary-custom:hover {
+  background-color: var(--naranja-hover);
+  border-color: var(--naranja-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+.btn-primary-custom:active {
+  transform: translateY(0);
+}
+
+.btn-primary-custom:disabled {
+  background-color: var(--fondo-terciario);
+  border-color: var(--fondo-terciario);
+  color: var(--texto-deshabilitado);
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* Progress Bar Corporativo */
+.progress-custom {
+  background-color: var(--fondo-terciario);
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.progress-custom::-webkit-progress-value {
+  background-color: var(--naranja-primario);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.progress-custom::-moz-progress-bar {
+  background-color: var(--naranja-primario);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* Card Corporativo */
+.card-custom {
+  background-color: var(--fondo-secundario);
+  border: 1px solid var(--fondo-terciario);
+  transition: all 0.2s ease;
+}
+
+.card-custom:hover {
+  border-color: var(--naranja-primario);
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.1);
+}
+
+/* ========================================
+   ANIMACIONES
+   ======================================== */
+
+/* Fade Enter */
+.fade-enter {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Float Animation */
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Pulse Slow */
+.pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* Slide In From Left */
+.slide-in-left {
+  animation: slideInLeft 0.4s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide In From Right */
+.slide-in-right {
+  animation: slideInRight 0.4s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ========================================
+   UTILIDADES
+   ======================================== */
+
+/* Gradiente Hero */
+.hero-gradient {
+  background: linear-gradient(135deg, #1F2937 0%, #111827 50%, #0F172A 100%);
+}
+
+/* Gradiente Naranja */
+.gradient-orange {
+  background: linear-gradient(135deg, var(--naranja-primario) 0%, var(--naranja-hover) 100%);
+}
+
+/* Texto con Gradiente */
+.gradient-text {
+  background: linear-gradient(135deg, var(--naranja-primario) 0%, var(--naranja-claro) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass Effect */
+.glass-effect {
+  background: rgba(31, 41, 55, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   ESTADOS DE COMPONENTES
+   ======================================== */
+
+/* Step Item (Wizard) */
+.step-item {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.step-item.active {
+  color: var(--naranja-primario);
+  font-weight: 600;
+}
+
+.step-item.completed {
+  color: var(--completado);
+}
+
+.step-item.pending {
+  color: var(--texto-deshabilitado);
+}
+
+/* ========================================
+   FOCUS VISIBLE (ACCESIBILIDAD)
+   ======================================== */
+
+*:focus-visible {
+  outline: 2px solid var(--naranja-primario);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Remover outline por defecto en elementos que no son accesibles por teclado */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ========================================
+   SCROLLBAR PERSONALIZADO (WEBKIT)
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--fondo-oscuro);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--fondo-terciario);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--naranja-primario);
+}
+
+/* ========================================
+   RESPONSIVE UTILITIES
+   ======================================== */
+
+/* Mobile-first hidden */
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .desktop-only {
+    display: block;
+  }
+  
+  .mobile-only {
+    display: none;
+  }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+}
+
+/* ========================================
+   DARK MODE OVERRIDES (Si se necesita)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  /* Asegurar que los colores corporativos se mantengan */
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* ========================================
+   TRANSITIONS GLOBALES
+   ======================================== */
+
+/* Transición suave para elementos interactivos */
+a, button, input, select, textarea {
+  transition: all 0.2s ease;
+}
+
+/* ========================================
+   SKELETON LOADING
+   ======================================== */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--fondo-secundario) 0%,
+    var(--fondo-terciario) 50%,
+    var(--fondo-secundario) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 0.375rem;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ========================================
+   BADGES PERSONALIZADOS
+   ======================================== */
+
+.badge-success {
+  background-color: var(--completado);
+  color: white;
+  border: none;
+}
+
+.badge-error {
+  background-color: var(--error);
+  color: white;
+  border: none;
+}
+
+.badge-warning {
+  background-color: var(--warning);
+  color: white;
+  border: none;
+}
+
+.badge-info {
+  background-color: var(--info);
+  color: white;
+  border: none;
+}
+
+/* ========================================
+   TOOLTIPS (Si se necesitan)
+   ======================================== */
+
+.tooltip-corporate {
+  position: relative;
+}
+
+.tooltip-corporate::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 0.75rem;
+  background-color: var(--fondo-secundario);
+  color: var(--texto-principal);
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  border: 1px solid var(--naranja-primario);
+}
+
+.tooltip-corporate:hover::after {
+  opacity: 1;
+}
