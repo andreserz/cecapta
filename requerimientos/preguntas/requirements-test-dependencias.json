@@ -1,0 +1,43 @@
+[
+    {
+        "titulo": "¿Cuál es el nombre de tu empresa?",
+        "tipo": "text",
+        "placeholder": "Ejemplo: Empresa S.A de C.V.",
+        "nombre": "nombre_empresa",
+        "maxlength": 200,
+        "valor_defecto": "",
+        "dependencia_previa": null
+    },
+    {
+        "titulo": "¿Cuál es la situación actual de tu empresa?",
+        "tipo": "textarea",
+        "placeholder": "Describe la situación actual que requiere un asistente...",
+        "nombre": "situacion_actual",
+        "maxlength": 2000,
+        "dependencia_previa": "Activo"
+    },
+    {
+        "titulo": "¿Cuáles son los objetivos del Asistente Conversacional?",
+        "tipo": "textarea",
+        "placeholder": "Ejemplo: Atender y dar seguimiento centralizado de mis prospectos...",
+        "nombre": "objetivos_asistente",
+        "maxlength": 2000,
+        "dependencia_previa": "Activo"
+    },
+    {
+        "titulo": "¿Cómo deseas que se llame el Asistente?",
+        "tipo": "text",
+        "placeholder": "Ejemplo: Juan Pérez",
+        "nombre": "nombre_asistente",
+        "maxlength": 200,
+        "dependencia_previa": null
+    },
+    {
+        "titulo": "¿Cuál es el tono de comunicación deseado?",
+        "tipo": "select",
+        "placeholder": "Selecciona una opción",
+        "nombre": "tono_comunicacion",
+        "opciones": ["Formal", "Amigable", "Divertido", "Profesional"],
+        "dependencia_previa": "Activo"
+    }
+]

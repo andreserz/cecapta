@@ -308,9 +308,43 @@ Formato de cada pregunta:
   "nombre": "nombre_campo",
   "maxlength": 500,
   "valor_defecto": "Valor inicial (opcional)",
-  "opciones": ["Opción 1", "Opción 2"]  // Solo para tipo select
+  "opciones": ["Opción 1", "Opción 2"],  // Solo para tipo select
+  "dependencia_previa": null  // null=libre, "Activo"=requiere respuesta anterior
 }
 ```
+
+### Dependencias Condicionales (Nuevo ✨)
+
+El sistema ahora soporta navegación condicional mediante el campo `dependencia_previa`:
+
+**Valores posibles:**
+- `null` - Navegación libre (comportamiento por defecto)
+- `"Activo"` - Requiere que la pregunta anterior esté respondida para avanzar
+
+**Ejemplo de uso:**
+```json
+[
+  {
+    "titulo": "¿Cuál es el nombre de tu empresa?",
+    "tipo": "text",
+    "nombre": "nombre_empresa",
+    "dependencia_previa": null
+  },
+  {
+    "titulo": "¿Cuál es la situación actual?",
+    "tipo": "textarea",
+    "nombre": "situacion_actual",
+    "dependencia_previa": "Activo"  // Requiere responder pregunta anterior
+  }
+]
+```
+
+**Comportamiento:**
+- Si una pregunta tiene `dependencia_previa: "Activo"`, el usuario **debe** responder la pregunta anterior antes de poder avanzar
+- El botón "Siguiente" se deshabilita visualmente si la dependencia no se cumple
+- Muestra mensaje específico indicando qué falta
+- La navegación hacia atrás (botón "Anterior") siempre es libre
+- Compatible con JSON existente (todas las preguntas actuales tienen `null`)
 
 ## 🐛 Solución de Problemas
 

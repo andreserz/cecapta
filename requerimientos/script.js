@@ -296,6 +296,27 @@ function actualizarBotones() {
         btnAnterior.classList.remove('btn-disabled');
     }
     
+    // Verificar si siguiente pregunta tiene dependencia no cumplida
+    let bloqueado = false;
+    let mensajeBloqueo = '';
+    
+    if (!esUltimaPregunta) {
+        const validacion = validarDependenciaPrevia(estado.preguntaActual + 1);
+        bloqueado = !validacion.valida;
+        mensajeBloqueo = validacion.mensaje;
+    }
+    
+    // Aplicar estado visual al botón siguiente
+    if (bloqueado) {
+        btnSiguiente.disabled = true;
+        btnSiguiente.classList.add('btn-disabled', 'opacity-50', 'cursor-not-allowed');
+        btnSiguiente.title = mensajeBloqueo;
+    } else {
+        btnSiguiente.disabled = false;
+        btnSiguiente.classList.remove('btn-disabled', 'opacity-50', 'cursor-not-allowed');
+        btnSiguiente.title = '';
+    }
+    
     // Botón siguiente/finalizar
     if (esUltimaPregunta) {
         btnSiguiente.innerHTML = `
@@ -312,6 +333,39 @@ function actualizarBotones() {
             </svg>
         `;
     }
+}
+
+// Validar dependencia previa de una pregunta
+function validarDependenciaPrevia(indicePregunta) {
+    const pregunta = window.preguntasData[indicePregunta];
+    
+    // Si no tiene dependencia_previa o es null, siempre es válida
+    if (!pregunta.dependencia_previa || pregunta.dependencia_previa === null) {
+        return { valida: true, mensaje: '' };
+    }
+    
+    // Si tiene dependencia "Activo", validar pregunta anterior
+    if (pregunta.dependencia_previa === "Activo") {
+        // Validar que existe pregunta anterior
+        if (indicePregunta === 0) {
+            console.warn('Primera pregunta no puede tener dependencia');
+            return { valida: true, mensaje: '' };
+        }
+        
+        // Obtener respuesta de la pregunta anterior
+        const respuestaAnterior = estado.respuestas[indicePregunta - 1];
+        const preguntaAnterior = window.preguntasData[indicePregunta - 1];
+        
+        // Validar que la pregunta anterior tenga respuesta
+        if (!respuestaAnterior || respuestaAnterior.trim() === '') {
+            return { 
+                valida: false, 
+                mensaje: `Debes responder "${preguntaAnterior.titulo}" antes de continuar`
+            };
+        }
+    }
+    
+    return { valida: true, mensaje: '' };
 }
 
 // Validar respuesta actual
@@ -373,10 +427,20 @@ function navegarSiguiente() {
     
     if (esUltimaPregunta) {
         finalizarConfiguracion();
-    } else {
-        estado.preguntaActual++;
-        mostrarPregunta(estado.preguntaActual);
+        return;
     }
+    
+    // Validar dependencia de la siguiente pregunta
+    const siguienteIndice = estado.preguntaActual + 1;
+    const validacion = validarDependenciaPrevia(siguienteIndice);
+    
+    if (!validacion.valida) {
+        mostrarError(validacion.mensaje);
+        return;
+    }
+    
+    estado.preguntaActual++;
+    mostrarPregunta(estado.preguntaActual);
 }
 
 // Finalizar y guardar configuración
