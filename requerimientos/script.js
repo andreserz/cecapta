@@ -7,6 +7,7 @@ const estado = {
 
 // Referencias a elementos del DOM
 let questionTitle, inputContainer, btnAnterior, btnSiguiente;
+let btnGuardarProgress;
 let progressBar, progressText, progressPercent;
 let errorMessage, errorText;
 let stepsList;
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inputContainer = document.getElementById('inputContainer');
     btnAnterior = document.getElementById('btnAnterior');
     btnSiguiente = document.getElementById('btnSiguiente');
+    btnGuardarProgress = document.getElementById('btnGuardarProgress');
     progressBar = document.getElementById('progressBar');
     progressText = document.getElementById('progressText');
     progressPercent = document.getElementById('progressPercent');
@@ -42,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event listeners para botones
     btnAnterior.addEventListener('click', navegarAnterior);
     btnSiguiente.addEventListener('click', navegarSiguiente);
+    btnGuardarProgress.addEventListener('click', guardarParaDespues);
     
     // Navegación con teclado
     document.addEventListener('keydown', manejarTeclado);
@@ -194,7 +197,7 @@ function actualizarBotones() {
     // Botón siguiente/finalizar
     if (esUltimaPregunta) {
         btnSiguiente.innerHTML = `
-            Finalizar
+            Finalizar y enviar
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
@@ -316,6 +319,72 @@ async function finalizarConfiguracion() {
         // Re-habilitar botón
         btnSiguiente.disabled = false;
         actualizarBotones();
+    }
+}
+
+// Guardar progreso para continuar después
+async function guardarParaDespues() {
+    // Guardar respuesta actual
+    guardarRespuestaActual();
+    
+    // Preparar datos con formato backup
+    const configuracion = {
+        tipo: 'backup',
+        pregunta_actual: estado.preguntaActual,
+        timestamp: new Date().toISOString(),
+        respuestas: {}
+    };
+    
+    window.preguntasData.forEach((pregunta, index) => {
+        configuracion.respuestas[pregunta.nombre] = estado.respuestas[index];
+    });
+    
+    // Deshabilitar todos los botones
+    btnGuardarProgress.disabled = true;
+    btnSiguiente.disabled = true;
+    btnAnterior.disabled = true;
+    
+    // Cambiar texto del botón a loading
+    const textoBtnProgressOriginal = btnGuardarProgress.innerHTML;
+    
+    btnGuardarProgress.innerHTML = `
+        <span class="loading loading-spinner loading-sm"></span>
+        Guardando...
+    `;
+    
+    try {
+        const response = await fetch('guardar.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(configuracion)
+        });
+        
+        const resultado = await response.json();
+        
+        if (response.ok && resultado.exito) {
+            // Mostrar modal de éxito
+            mensajeExito.textContent = `✅ Progreso guardado exitosamente. Puedes continuar en cualquier momento.`;
+            modalExito.showModal();
+        } else {
+            throw new Error(resultado.error || 'Error desconocido');
+        }
+        
+    } catch (error) {
+        console.error('Error al guardar:', error);
+        mensajeError.textContent = `Error al guardar el progreso: ${error.message}. Por favor intenta nuevamente.`;
+        modalError.showModal();
+    } finally {
+        // Re-habilitar todos los botones
+        btnGuardarProgress.disabled = false;
+        btnSiguiente.disabled = false;
+        if (estado.preguntaActual > 0) {
+            btnAnterior.disabled = false;
+        }
+        
+        // Restaurar texto original
+        btnGuardarProgress.innerHTML = textoBtnProgressOriginal;
     }
 }
 

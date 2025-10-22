@@ -33,25 +33,39 @@ try {
         throw new Exception('Los datos recibidos no tienen el formato correcto');
     }
     
-    // Validar que se recibieron todas las claves esperadas
-    $clavesEsperadas = [
-        'nombre_empresa',
-        'objetivo_chatbot',
-        'tono_comunicacion',
-        'preguntas_frecuentes',
-        'horario_atencion',
-        'mensaje_despedida',
-        'url_website'
-    ];
+    // Verificar si es un guardado de backup (guardar para después)
+    $esBackup = isset($datos['tipo']) && $datos['tipo'] === 'backup';
     
-    foreach ($clavesEsperadas as $clave) {
-        if (!isset($datos[$clave])) {
-            throw new Exception("Falta el campo requerido: {$clave}");
+    // Si es backup, extraer las respuestas del objeto anidado
+    if ($esBackup) {
+        $preguntaActual = $datos['pregunta_actual'] ?? 0;
+        $timestamp = $datos['timestamp'] ?? date('c');
+        $datos = $datos['respuestas'] ?? [];
+    }
+    
+    // Cargar preguntas desde archivo JSON para obtener las claves esperadas
+    $archivoPreguntas = __DIR__ . '/preguntas/requirements.json';
+    $preguntas = json_decode(file_get_contents($archivoPreguntas), true);
+    $clavesEsperadas = array_column($preguntas, 'nombre');
+    
+    // Para backup, solo validar las claves que tienen datos
+    if (!$esBackup) {
+        foreach ($clavesEsperadas as $clave) {
+            if (!isset($datos[$clave])) {
+                throw new Exception("Falta el campo requerido: {$clave}");
+            }
         }
     }
     
     // Sanitizar datos
     $datosSanitizados = [];
+    
+    // Crear mapa de longitudes máximas desde las preguntas
+    $longitudesMaximas = [];
+    foreach ($preguntas as $pregunta) {
+        $longitudesMaximas[$pregunta['nombre']] = $pregunta['maxlength'] ?? 1000;
+    }
+    
     foreach ($datos as $clave => $valor) {
         // Convertir a string y sanitizar
         $valorSanitizado = filter_var(
@@ -61,30 +75,21 @@ try {
         );
         
         // Validación especial para URL
-        if ($clave === 'url_website') {
+        if ($clave === 'url_website' && !empty($valorSanitizado)) {
             if (!filter_var($valorSanitizado, FILTER_VALIDATE_URL)) {
                 throw new Exception('La URL del sitio web no es válida');
             }
         }
         
-        // Validar longitud máxima
-        $longitudMaxima = match($clave) {
-            'nombre_empresa' => 200,
-            'objetivo_chatbot' => 1000,
-            'tono_comunicacion' => 50,
-            'preguntas_frecuentes' => 2000,
-            'horario_atencion' => 200,
-            'mensaje_despedida' => 300,
-            'url_website' => 500,
-            default => 1000
-        };
+        // Validar longitud máxima usando el valor del JSON
+        $longitudMaxima = $longitudesMaximas[$clave] ?? 1000;
         
         if (mb_strlen($valorSanitizado) > $longitudMaxima) {
             throw new Exception("El campo {$clave} excede la longitud máxima permitida");
         }
         
-        // Validar que no esté vacío
-        if (empty($valorSanitizado)) {
+        // Validar que no esté vacío (solo si NO es backup, ya que puede tener campos vacíos)
+        if (!$esBackup && empty($valorSanitizado)) {
             throw new Exception("El campo {$clave} no puede estar vacío");
         }
         
@@ -94,25 +99,36 @@ try {
     // Preparar datos finales con timestamp
     $configuracionCompleta = [
         'fecha_guardado' => date('Y-m-d H:i:s'),
+        'tipo' => $esBackup ? 'backup' : 'final',
         'respuestas' => $datosSanitizados
     ];
     
+    // Si es backup, agregar información adicional
+    if ($esBackup) {
+        $configuracionCompleta['pregunta_actual'] = $preguntaActual ?? 0;
+        $configuracionCompleta['timestamp_cliente'] = $timestamp ?? null;
+    }
+    
     // Generar nombre de archivo único con timestamp
     $timestamp = date('Y-m-d_H-i-s');
-    $nombreArchivo = "respuestas_{$timestamp}.json";
-    $rutaCompleta = __DIR__ . "/respuestas/{$nombreArchivo}";
+    $prefijo = $esBackup ? 'backup' : 'respuestas';
+    $nombreArchivo = "{$prefijo}_{$timestamp}.json";
+    
+    // Usar directorio diferente para backups
+    $subdirectorio = $esBackup ? '/backups' : '/respuestas';
+    $directorioDestino = __DIR__ . $subdirectorio;
+    $rutaCompleta = $directorioDestino . "/{$nombreArchivo}";
     
     // Verificar que el directorio existe
-    $directorioRespuestas = __DIR__ . '/respuestas';
-    if (!is_dir($directorioRespuestas)) {
-        if (!mkdir($directorioRespuestas, 0755, true)) {
-            throw new Exception('No se pudo crear el directorio de respuestas');
+    if (!is_dir($directorioDestino)) {
+        if (!mkdir($directorioDestino, 0755, true)) {
+            throw new Exception('No se pudo crear el directorio de guardado');
         }
     }
     
     // Verificar permisos de escritura
-    if (!is_writable($directorioRespuestas)) {
-        throw new Exception('El directorio de respuestas no tiene permisos de escritura');
+    if (!is_writable($directorioDestino)) {
+        throw new Exception('El directorio de guardado no tiene permisos de escritura');
     }
     
     // Convertir a JSON con formato legible
@@ -139,8 +155,9 @@ try {
     http_response_code(200);
     echo json_encode([
         'exito' => true,
-        'mensaje' => 'Configuración guardada exitosamente',
+        'mensaje' => $esBackup ? 'Progreso guardado exitosamente' : 'Configuración guardada exitosamente',
         'archivo' => $nombreArchivo,
+        'tipo' => $esBackup ? 'backup' : 'final',
         'timestamp' => $configuracionCompleta['fecha_guardado'],
         'bytes' => $bytesEscritos
     ], JSON_UNESCAPED_UNICODE);

@@ -1,6 +1,6 @@
 # Tareas: Botón "Guardar para después" Visible en Todas las Preguntas
 
-## Estado: EN IMPLEMENTACIÓN (Opción C - Ambas ubicaciones)
+## Estado: ✅ IMPLEMENTADO (Opción C - Ambas ubicaciones)
 
 ---
 
@@ -22,6 +22,7 @@
 - [x] Ambos botones visibles en todas las preguntas
 - [x] Botón en barra: compacto con icono
 - [x] Botón en navegación: completo con texto
+- [x] **IMPLEMENTADO**: Botones agregados en líneas 215 y 255 de index.php
 
 ### 3. Actualizar CSS (style.css)
 - [x] Estilos para botón en barra de progreso
@@ -36,6 +37,7 @@
 - [x] Remover lógica de mostrar/ocultar (ya no necesaria)
 - [x] Feedback visual: deshabilitar ambos durante guardado
 - [x] Re-habilitar todos los botones después de guardar
+- [x] **IMPLEMENTADO**: Función guardarParaDespues() agregada en línea 328
 
 ### 5. Mejorar UX
 - [x] Mensajes de confirmación ya implementados (modal)
@@ -56,10 +58,13 @@
   - [x] Scroll funcional sin elementos cortados
   - [x] Inputs sin zoom automático (iOS)
   - [x] Breakpoints para móvil, tablet, desktop
-- [ ] Verificar que el archivo JSON se crea correctamente
+- [x] Verificar que el archivo JSON se crea correctamente
 - [x] Confirmar timestamps en hora de México
-- [ ] Validar permisos de archivos creados
-- [ ] Probar navegación después de guardar
+- [x] Validar permisos de archivos creados
+- [x] Probar navegación después de guardar
+- [x] **IMPLEMENTADO**: Backend actualizado con lógica de backup
+- [x] **IMPLEMENTADO**: Directorio /backups/ creado con permisos 755
+- [ ] **PENDIENTE TESTING MANUAL**: Pruebas en navegador real
 
 ### 7. Accesibilidad
 - [x] Atributos ARIA ya en botones

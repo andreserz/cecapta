@@ -1,59 +1,23 @@
 <?php
 declare(strict_types=1);
 
-// Array de preguntas del wizard
-$preguntas = [
-    [
-        "titulo" => "¿Cuál es el nombre de tu empresa?",
-        "tipo" => "text",
-        "placeholder" => "Ej: CallBlaster AI",
-        "nombre" => "nombre_empresa",
-        "maxlength" => 200,
-        "valor_defecto" => "CECAPTA"
-    ],
-    [
-        "titulo" => "Describe brevemente el objetivo principal de tu chatbot",
-        "tipo" => "textarea",
-        "placeholder" => "Ej: Atender dudas frecuentes de clientes sobre nuestros productos y servicios, proporcionar información sobre horarios y ubicaciones...",
-        "nombre" => "objetivo_chatbot",
-        "maxlength" => 1000
-    ],
-    [
-        "titulo" => "¿Cuál es el tono de comunicación deseado?",
-        "tipo" => "select",
-        "placeholder" => "Selecciona una opción",
-        "nombre" => "tono_comunicacion",
-        "opciones" => ["Formal", "Amigable", "Divertido", "Profesional"]
-    ],
-    [
-        "titulo" => "Menciona 3 preguntas frecuentes que debe saber responder",
-        "tipo" => "textarea",
-        "placeholder" => "1. ¿Cuáles son los horarios de atención?\n2. ¿Dónde están ubicados?\n3. ¿Qué servicios ofrecen?",
-        "nombre" => "preguntas_frecuentes",
-        "maxlength" => 2000
-    ],
-    [
-        "titulo" => "¿Cuál es el horario de atención?",
-        "tipo" => "text",
-        "placeholder" => "Ej: Lunes a Viernes de 9am a 6pm",
-        "nombre" => "horario_atencion",
-        "maxlength" => 200
-    ],
-    [
-        "titulo" => "¿Cómo debe despedirse el chatbot?",
-        "tipo" => "text",
-        "placeholder" => "Ej: ¡Estoy para servirte! ¡Que tengas un excelente día!",
-        "nombre" => "mensaje_despedida",
-        "maxlength" => 300
-    ],
-    [
-        "titulo" => "Proporciona la URL de tu página web",
-        "tipo" => "url",
-        "placeholder" => "https://ejemplo.com",
-        "nombre" => "url_website",
-        "maxlength" => 500
-    ]
-];
+// Cargar preguntas desde archivo JSON externo
+$archivoPreguntas = __DIR__ . '/preguntas/requirements.json';
+
+if (!file_exists($archivoPreguntas)) {
+    die('Error: No se encontró el archivo de preguntas. Contacte al administrador.');
+}
+
+$contenidoJson = file_get_contents($archivoPreguntas);
+$preguntas = json_decode($contenidoJson, true);
+
+if (json_last_error() !== JSON_ERROR_NONE) {
+    die('Error: El archivo de preguntas tiene un formato inválido. Contacte al administrador.');
+}
+
+if (!is_array($preguntas) || empty($preguntas)) {
+    die('Error: El archivo de preguntas está vacío o es inválido. Contacte al administrador.');
+}
 
 // Convertir a JSON para JavaScript
 $preguntasJson = json_encode($preguntas, JSON_UNESCAPED_UNICODE);
@@ -87,6 +51,26 @@ $preguntasJson = json_encode($preguntas, JSON_UNESCAPED_UNICODE);
             --naranja-claro: #FDBA74;
             --fondo-oscuro: #111827;
             --completado: #10B981;
+        }
+        
+        /* Ajuste de altura dinámica para móviles */
+        @media (max-width: 1024px) {
+            .question-card {
+                max-height: calc(100vh - 260px);
+                overflow-y: auto;
+                padding: 1.5rem !important;
+            }
+            
+            #questionArea {
+                max-height: calc(100vh - 350px);
+                overflow-y: auto;
+            }
+            
+            /* Reducir espaciado en móviles */
+            .question-card h1 {
+                margin-bottom: 1.5rem !important;
+                font-size: 1.5rem !important;
+            }
         }
         
         /* Transiciones suaves */
@@ -157,7 +141,7 @@ $preguntasJson = json_encode($preguntas, JSON_UNESCAPED_UNICODE);
 <body class="bg-gray-900 text-gray-100 h-screen flex flex-col">
     
     <!-- Header con Logo y Título -->
-    <header class="bg-gray-800 border-b border-gray-700 py-4 px-6">
+    <header class="bg-gray-800 border-b border-gray-700 py-1 px-6">
         <div class="max-w-7xl mx-auto flex items-center gap-4">
             <img 
                 src="Logo_Claro_Trans.png" 
@@ -166,7 +150,7 @@ $preguntasJson = json_encode($preguntas, JSON_UNESCAPED_UNICODE);
                 loading="eager"
             >
             <h1 class="text-xl md:text-4xl lg:text-2xl font-bold text-gray-100">
-                CECAPTA :: Requerimientos para asistente de IA
+                Requerimientos
             </h1>
         </div>
     </header>
@@ -188,15 +172,21 @@ $preguntasJson = json_encode($preguntas, JSON_UNESCAPED_UNICODE);
             
             <!-- Barra de Progreso -->
             <div class="mb-6">
-                <div class="flex justify-between items-center mb-2">
+                <div class="flex justify-between items-center mb-2 gap-2 flex-wrap">
                     <span id="progressText" class="text-sm font-medium text-gray-400">Paso 1 de 7</span>
+                    
+                    <!-- Botón Guardar para Después en Barra de Progreso -->
+                    <button id="btnGuardarProgress" class="btn btn-sm btn-ghost gap-1 text-orange-500 hover:bg-orange-500 hover:bg-opacity-20" title="Guardar progreso actual">
+                        Guardar para después
+                    </button>
+                    
                     <span id="progressPercent" class="text-sm font-medium text-orange-500">14%</span>
                 </div>
                 <progress id="progressBar" class="progress progress-custom w-full" value="14" max="100"></progress>
             </div>
             
             <!-- Card de Pregunta -->
-            <div class="flex-1 bg-gray-800 rounded-lg p-8 flex flex-col justify-between">
+            <div class="flex-1 bg-gray-800 rounded-lg p-8 flex flex-col justify-between question-card">
                 
                 <!-- Pregunta y Campo de Entrada -->
                 <div class="flex-1 flex flex-col justify-center" id="questionArea">
@@ -216,20 +206,22 @@ $preguntasJson = json_encode($preguntas, JSON_UNESCAPED_UNICODE);
                 </div>
                 
                 <!-- Botones de Navegación -->
-                <div class="flex justify-between items-center mt-8 pt-6 border-t border-gray-700">
-                    <button id="btnAnterior" class="btn btn-outline btn-disabled" disabled>
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mt-8 pt-6 border-t border-gray-700">
+                    <button id="btnAnterior" class="btn btn-outline btn-disabled w-full sm:w-auto order-2 sm:order-1" disabled>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
                         Anterior
                     </button>
                     
-                    <button id="btnSiguiente" class="btn btn-primary-custom">
-                        Siguiente
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
+                    <div class="flex gap-3 w-full sm:w-auto order-1 sm:order-2">
+                        <button id="btnSiguiente" class="btn btn-primary-custom flex-1 sm:flex-initial">
+                            Siguiente
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 
             </div>
@@ -247,11 +239,11 @@ $preguntasJson = json_encode($preguntas, JSON_UNESCAPED_UNICODE);
                 <svg xmlns="http://www.w3.org/2000/svg" class="inline h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                ¡Configuración Guardada!
+                ¡Progreso Guardado!
             </h3>
-            <p class="py-4" id="mensajeExito">Tu configuración ha sido guardada exitosamente.</p>
+            <p class="py-4" id="mensajeExito">Tu progreso ha sido guardado exitosamente.</p>
             <div class="modal-action">
-                <button class="btn btn-primary-custom" onclick="window.location.reload()">Crear Nueva Configuración</button>
+                <button class="btn btn-primary-custom" onclick="modalExito.close()">Continuar</button>
             </div>
         </div>
     </dialog>

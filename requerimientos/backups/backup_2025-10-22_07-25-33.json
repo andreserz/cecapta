@@ -1,0 +1,15 @@
+{
+    "fecha_guardado": "2025-10-22 07:25:33",
+    "tipo": "backup",
+    "respuestas": {
+        "nombre_empresa": "CECAPTA",
+        "objetivo_chatbot": "",
+        "tono_comunicacion": "",
+        "preguntas_frecuentes": "",
+        "horario_atencion": "",
+        "mensaje_despedida": "",
+        "url_website": ""
+    },
+    "pregunta_actual": 0,
+    "timestamp_cliente": "2025-10-22T07:25:33.936Z"
+}

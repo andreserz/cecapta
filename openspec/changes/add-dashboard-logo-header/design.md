@@ -94,7 +94,7 @@ El dashboard actual carece de branding visual y identificación clara. Los usuar
 **Decisión**: Flexbox horizontal con gap
 
 ```html
-<header class="bg-gray-800 border-b border-gray-700 py-4 px-6">
+<header class="bg-gray-800 border-b border-gray-700 py-1 px-6">
   <div class="flex items-center gap-4">
     <img src="..." class="h-10 md:h-12 w-auto" alt="Call Blaster Logo">
     <h1 class="...">Requerimientos</h1>
@@ -114,7 +114,7 @@ El dashboard actual carece de branding visual y identificación clara. Los usuar
 <body class="bg-gray-900 text-gray-100 h-screen flex flex-col">
     
     <!-- NUEVO: Header con Logo y Título -->
-    <header class="bg-gray-800 border-b border-gray-700 py-4 px-6">
+    <header class="bg-gray-800 border-b border-gray-700 py-1 px-6">
         <div class="max-w-7xl mx-auto flex items-center gap-4">
             <img 
                 src="../main/img/Logo_Claro_Trans.png" 

@@ -157,7 +157,7 @@ $preguntasJson = json_encode($preguntas, JSON_UNESCAPED_UNICODE);
 <body class="bg-gray-900 text-gray-100 h-screen flex flex-col">
     
     <!-- Header con Logo y Título -->
-    <header class="bg-gray-800 border-b border-gray-700 py-4 px-6">
+    <header class="bg-gray-800 border-b border-gray-700 py-1 px-6">
         <div class="max-w-7xl mx-auto flex items-center gap-4">
             <img 
                 src="Logo_Claro_Trans.png" 
@@ -166,7 +166,7 @@ $preguntasJson = json_encode($preguntas, JSON_UNESCAPED_UNICODE);
                 loading="eager"
             >
             <h1 class="text-xl md:text-4xl lg:text-2xl font-bold text-gray-100">
-                CECAPTA :: Requerimientos para asistente de IA
+                Requerimientos
             </h1>
         </div>
     </header>

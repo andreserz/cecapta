@@ -8,7 +8,7 @@ Patrones de diseño reutilizables para el sistema CECAPTA CallBlaster AI.
 ```html
 <body class="bg-gray-900 text-gray-100 h-screen flex flex-col overflow-hidden">
   <!-- Header -->
-  <header class="bg-gray-800 border-b border-gray-700 py-4 px-6">
+  <header class="bg-gray-800 border-b border-gray-700 py-1 px-6">
     <div class="max-w-7xl mx-auto">
       <h1 class="text-2xl font-bold">Título de la Aplicación</h1>
     </div>

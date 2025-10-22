@@ -4,12 +4,14 @@ Sistema de wizard (asistente paso a paso) para configurar chatbots de IA sin con
 
 ## 📋 Características
 
-- ✅ **Wizard de 7 pasos** para capturar configuración completa del chatbot
+- ✅ **Wizard de 14 pasos** para capturar configuración completa del chatbot
+- ✅ **Preguntas configurables desde JSON** (`preguntas/requirements.json`)
 - ✅ **Diseño responsive** mobile-first sin scroll (funciona en cualquier dispositivo)
 - ✅ **Tema oscuro** con paleta de colores naranja corporativa
 - ✅ **Validación en tiempo real** de todos los campos
 - ✅ **Almacenamiento histórico** en archivos JSON con timestamp
 - ✅ **Sistema de backup automático** con versionamiento
+- ✅ **Dos modos de guardado**: "Guardar para después" y "Finalizar y enviar"
 - ✅ **Notificaciones por correo** en entregas finales
 - ✅ **Navegación intuitiva** con teclado y mouse
 - ✅ **Feedback visual** de progreso y completitud
@@ -24,15 +26,24 @@ https://cecapta.callblasterai.com/requerimientos/
 
 ## 📊 Datos Recopilados
 
-El wizard recopila los siguientes datos en 7 pasos:
+El wizard recopila los siguientes datos en 14 pasos:
 
 1. **Nombre de la empresa** (texto, máx. 200 caracteres)
-2. **Objetivo del chatbot** (textarea, máx. 1000 caracteres)
-3. **Tono de comunicación** (selección: Formal, Amigable, Divertido, Profesional)
-4. **Preguntas frecuentes** (textarea, máx. 2000 caracteres)
-5. **Horario de atención** (texto, máx. 200 caracteres)
-6. **Mensaje de despedida** (texto, máx. 300 caracteres)
-7. **URL del sitio web** (URL válida, máx. 500 caracteres)
+2. **Situación actual** (textarea, máx. 2000 caracteres)
+3. **Objetivos del asistente** (textarea, máx. 2000 caracteres)
+4. **Métricas esperadas** (textarea, máx. 2000 caracteres)
+5. **Nombre del asistente** (texto, máx. 200 caracteres)
+6. **Tono de comunicación** (selección: Formal, Amigable, Divertido, Profesional)
+7. **Saludo** (texto, máx. 500 caracteres)
+8. **Casos de uso** (textarea, máx. 5000 caracteres)
+9. **Flujos conversacionales** (textarea, máx. 3000 caracteres)
+10. **Reglas de negocio** (textarea, máx. 3000 caracteres)
+11. **Preguntas frecuentes** (textarea, máx. 3000 caracteres)
+12. **Horario de atención** (textarea, máx. 500 caracteres)
+13. **Mensaje de despedida** (texto, máx. 300 caracteres)
+14. **URL del sitio web** (URL válida, máx. 500 caracteres)
+
+> **Nota:** Las preguntas se configuran dinámicamente desde `preguntas/requirements.json`, lo que permite modificarlas sin cambiar el código.
 
 ## 📁 Estructura de Archivos
 
