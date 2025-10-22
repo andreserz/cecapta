@@ -73,7 +73,8 @@ function renderizarSidebar() {
             li.classList.add('pending');
         }
         
-        li.innerHTML = `${icono}<span class="text-sm">${numero}. ${titulo}</span>`;
+        // li.innerHTML = `${icono}<span class="text-sm">${numero}. ${titulo}</span>`;
+        li.innerHTML = `${icono}<span class="text-sm">${titulo}</span>`;
         stepsList.appendChild(li);
     });
 }

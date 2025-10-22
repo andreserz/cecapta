@@ -45,6 +45,11 @@
 - [x] Toast/notificación usa modal de DaisyUI
 - [ ] Considerar shortcut de teclado (Ctrl+S) - Opcional
 - [x] Feedback diferenciado según botón (compacto vs completo)
+- [x] **AJUSTADO**: Título del header reducido 33%
+- [x] **AJUSTADO**: Toast naranja con transparencia 70%
+- [x] **IMPLEMENTADO**: Toast de éxito al guardar progreso
+- [x] **IMPLEMENTADO**: Toast de éxito al guardar configuración final
+- [x] **REFACTORIZADO**: Funciones reutilizables para toasts (éxito e info)
 
 ### 6. Testing
 - [x] Probar guardado desde botón en barra de progreso
@@ -64,7 +69,11 @@
 - [x] Probar navegación después de guardar
 - [x] **IMPLEMENTADO**: Backend actualizado con lógica de backup
 - [x] **IMPLEMENTADO**: Directorio /backups/ creado con permisos 755
-- [ ] **PENDIENTE TESTING MANUAL**: Pruebas en navegador real
+- [x] **CORREGIDO**: Formato de nombre de archivo: backup_YYmmDD_HHMMSS.json
+- [x] **CORREGIDO**: Timezone configurado a America/Mexico_City en PHP
+- [x] **CORREGIDO**: Timezone configurado a America/Mexico_City en notificaciones JavaScript
+- [x] **IMPLEMENTADO**: Carga automática del último backup al recargar página
+- [ ] **PENDIENTE TESTING MANUAL**: Pruebas en navegador real completas
 
 ### 7. Accesibilidad
 - [x] Atributos ARIA ya en botones

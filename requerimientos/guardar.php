@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+// Configurar timezone de México
+date_default_timezone_set('America/Mexico_City');
+
 // Configurar headers
 header('Content-Type: application/json; charset=utf-8');
 
@@ -109,8 +112,8 @@ try {
         $configuracionCompleta['timestamp_cliente'] = $timestamp ?? null;
     }
     
-    // Generar nombre de archivo único con timestamp
-    $timestamp = date('Y-m-d_H-i-s');
+    // Generar nombre de archivo único con timestamp formato: backup_YYmmDD_HHMMSS.json
+    $timestamp = date('ymd_His');
     $prefijo = $esBackup ? 'backup' : 'respuestas';
     $nombreArchivo = "{$prefijo}_{$timestamp}.json";
     

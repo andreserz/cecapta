@@ -14,7 +14,7 @@ let stepsList;
 let modalExito, modalError, mensajeExito, mensajeError;
 
 // Inicialización
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Obtener referencias a elementos del DOM
     questionTitle = document.getElementById('questionTitle');
     inputContainer = document.getElementById('inputContainer');
@@ -35,11 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar respuestas vacías o con valores por defecto
     estado.respuestas = window.preguntasData.map(pregunta => pregunta.valor_defecto || '');
     
+    // Intentar cargar último backup
+    await cargarUltimoBackup();
+    
     // Renderizar sidebar de pasos
     renderizarSidebar();
     
     // Mostrar primera pregunta
-    mostrarPregunta(0);
+    mostrarPregunta(estado.preguntaActual);
     
     // Event listeners para botones
     btnAnterior.addEventListener('click', navegarAnterior);
@@ -49,6 +52,104 @@ document.addEventListener('DOMContentLoaded', () => {
     // Navegación con teclado
     document.addEventListener('keydown', manejarTeclado);
 });
+
+// Cargar último backup guardado
+async function cargarUltimoBackup() {
+    try {
+        const response = await fetch('cargar_ultimo_backup.php');
+        const resultado = await response.json();
+        
+        if (response.ok && resultado.exito && resultado.backup) {
+            const backup = resultado.backup;
+            
+            // Restaurar respuestas
+            if (backup.respuestas) {
+                window.preguntasData.forEach((pregunta, index) => {
+                    const valor = backup.respuestas[pregunta.nombre];
+                    if (valor !== undefined && valor !== null) {
+                        estado.respuestas[index] = valor;
+                        
+                        // Marcar como completada si tiene valor
+                        if (valor.toString().trim() !== '') {
+                            estado.preguntasCompletadas.add(index);
+                        }
+                    }
+                });
+            }
+            
+            // Restaurar pregunta actual
+            if (backup.pregunta_actual !== undefined) {
+                estado.preguntaActual = backup.pregunta_actual;
+            }
+            
+            console.log('✅ Backup restaurado:', resultado.archivo);
+            
+            // Mostrar notificación discreta
+            if (backup.fecha_guardado) {
+                const fecha = new Date(backup.fecha_guardado.replace(' ', 'T'));
+                const fechaLegible = fecha.toLocaleString('es-MX', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'America/Mexico_City'
+                });
+                
+                // Mostrar toast de restauración (usa icono info)
+                mostrarToastInfo(`ℹ️ Progreso restaurado (${fechaLegible})`);
+            }
+        }
+        
+    } catch (error) {
+        // Silencioso - si no hay backup, continuar normalmente
+        console.log('No hay backup previo o error al cargar:', error.message);
+    }
+}
+
+// Mostrar toast de éxito con estilo naranja (check icon)
+function mostrarToastExito(mensaje) {
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-top toast-end z-50';
+    toast.innerHTML = `
+        <div class="alert shadow-lg" style="background-color: rgba(249, 115, 22, 0.7); border-color: rgba(249, 115, 22, 0.9); color: white;">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current flex-shrink-0 w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>${mensaje}</span>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    
+    // Remover después de 4 segundos
+    setTimeout(() => {
+        toast.remove();
+    }, 4000);
+}
+
+// Mostrar toast de información con estilo naranja (info icon)
+function mostrarToastInfo(mensaje) {
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-top toast-end z-50';
+    toast.innerHTML = `
+        <div class="alert shadow-lg" style="background-color: rgba(249, 115, 22, 0.7); border-color: rgba(249, 115, 22, 0.9); color: white;">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current flex-shrink-0 w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>${mensaje}</span>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    
+    // Remover después de 4 segundos
+    setTimeout(() => {
+        toast.remove();
+    }, 4000);
+}
 
 // Renderizar sidebar de pasos (desktop)
 function renderizarSidebar() {
@@ -76,7 +177,8 @@ function renderizarSidebar() {
             li.classList.add('pending');
         }
         
-        li.innerHTML = `${icono}<span class="text-sm">${numero}. ${titulo}</span>`;
+        // li.innerHTML = `${icono}<span class="text-sm">${numero}. ${titulo}</span>`;
+        li.innerHTML = `${icono}<span class="text-sm">${titulo}</span>`;
         stepsList.appendChild(li);
     });
 }
@@ -304,9 +406,14 @@ async function finalizarConfiguracion() {
         const resultado = await response.json();
         
         if (response.ok && resultado.exito) {
-            // Mostrar modal de éxito
-            mensajeExito.textContent = `Tu configuración ha sido guardada exitosamente en el archivo: ${resultado.archivo}`;
-            modalExito.showModal();
+            // Mostrar toast de éxito
+            mostrarToastExito('✅ Configuración guardada exitosamente');
+            
+            // Esperar 2 segundos antes de reiniciar o redirigir
+            setTimeout(() => {
+                // Opcional: recargar o redirigir
+                // window.location.reload();
+            }, 2000);
         } else {
             throw new Error(resultado.error || 'Error desconocido');
         }
@@ -364,9 +471,8 @@ async function guardarParaDespues() {
         const resultado = await response.json();
         
         if (response.ok && resultado.exito) {
-            // Mostrar modal de éxito
-            mensajeExito.textContent = `✅ Progreso guardado exitosamente. Puedes continuar en cualquier momento.`;
-            modalExito.showModal();
+            // Mostrar toast de éxito
+            mostrarToastExito('✅ Progreso guardado exitosamente');
         } else {
             throw new Error(resultado.error || 'Error desconocido');
         }

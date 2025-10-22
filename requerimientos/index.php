@@ -149,7 +149,7 @@ $preguntasJson = json_encode($preguntas, JSON_UNESCAPED_UNICODE);
                 class="h-10 md:h-12 w-auto"
                 loading="eager"
             >
-            <h1 class="text-xl md:text-4xl lg:text-2xl font-bold text-gray-100">
+            <h1 class="text-base md:text-xl lg:text-xl font-bold text-gray-100">
                 Requerimientos
             </h1>
         </div>
