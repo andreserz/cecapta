@@ -77,9 +77,23 @@ async function cargarUltimoBackup() {
                 });
             }
             
-            // Restaurar pregunta actual
-            if (backup.pregunta_actual !== undefined) {
-                estado.preguntaActual = backup.pregunta_actual;
+            // Determinar pregunta actual según las respuestas restauradas
+            // Buscar la última pregunta con respuesta válida
+            let ultimaPreguntaRespondida = -1;
+            for (let i = 0; i < window.preguntasData.length; i++) {
+                if (estado.respuestas[i] && estado.respuestas[i].toString().trim() !== '') {
+                    ultimaPreguntaRespondida = i;
+                }
+            }
+            
+            // Si hay preguntas respondidas, ir a la siguiente sin responder
+            // Si no hay respuestas, quedarse en la primera (0)
+            if (ultimaPreguntaRespondida >= 0) {
+                // Ir a la siguiente pregunta después de la última respondida
+                estado.preguntaActual = Math.min(ultimaPreguntaRespondida + 1, window.preguntasData.length - 1);
+            } else {
+                // No hay respuestas, empezar en la primera pregunta
+                estado.preguntaActual = 0;
             }
             
             console.log('✅ Backup restaurado:', resultado.archivo);
@@ -151,6 +165,48 @@ function mostrarToastInfo(mensaje) {
     }, 4000);
 }
 
+// Verificar si se puede navegar a un índice específico
+function puedeNavegarAIndice(targetIndex) {
+    // Permitir navegación hacia atrás sin restricciones
+    if (targetIndex < estado.preguntaActual) {
+        return true;
+    }
+    
+    // Permitir siguiente pregunta inmediata
+    if (targetIndex === estado.preguntaActual + 1) {
+        return true;
+    }
+    
+    // Permitir si ya fue visitada/completada
+    if (estado.preguntasCompletadas.has(targetIndex)) {
+        return true;
+    }
+    
+    // Bloquear saltos hacia adelante a preguntas no visitadas
+    return false;
+}
+
+// Navegar a una pregunta específica mediante click en sidebar
+function navegarAPregunta(targetIndex) {
+    // No hacer nada si es la pregunta actual
+    if (targetIndex === estado.preguntaActual) {
+        return;
+    }
+    
+    // Verificar si se puede navegar a ese índice
+    if (!puedeNavegarAIndice(targetIndex)) {
+        mostrarToastInfo('⚠️ Completa las preguntas anteriores primero');
+        return;
+    }
+    
+    // Guardar respuesta actual (sin validar estrictamente)
+    guardarRespuestaActual();
+    
+    // Actualizar índice y mostrar pregunta
+    estado.preguntaActual = targetIndex;
+    mostrarPregunta(targetIndex);
+}
+
 // Renderizar sidebar de pasos (desktop)
 function renderizarSidebar() {
     if (!stepsList) return;
@@ -163,6 +219,16 @@ function renderizarSidebar() {
         
         const numero = index + 1;
         const titulo = pregunta.titulo.substring(0, 40) + (pregunta.titulo.length > 40 ? '...' : '');
+        
+        // Determinar si el paso es clickeable
+        const esClickeable = puedeNavegarAIndice(index) && index !== estado.preguntaActual;
+        
+        // Agregar clases según clickeabilidad
+        if (esClickeable) {
+            li.classList.add('clickable');
+        } else if (index > estado.preguntaActual && !estado.preguntasCompletadas.has(index)) {
+            li.classList.add('disabled');
+        }
         
         // Icono según estado
         let icono = '';
@@ -177,8 +243,13 @@ function renderizarSidebar() {
             li.classList.add('pending');
         }
         
-        // li.innerHTML = `${icono}<span class="text-sm">${numero}. ${titulo}</span>`;
         li.innerHTML = `${icono}<span class="text-sm">${titulo}</span>`;
+        
+        // Agregar event listener si es clickeable
+        if (esClickeable) {
+            li.addEventListener('click', () => navegarAPregunta(index));
+        }
+        
         stepsList.appendChild(li);
     });
 }
@@ -233,9 +304,12 @@ function crearCampoInput(pregunta, valorActual) {
                     class="input input-bordered w-full input-lg bg-gray-700 text-white"
                     placeholder="${pregunta.placeholder}"
                     value="${valor}"
-                    maxlength="${pregunta.maxlength}"
                     autocomplete="off"
                 />
+                <div class="text-right text-sm text-gray-400 mt-1">
+                    <span id="charCount">${valor.length}</span> caracteres
+                    ${pregunta.maxlength ? `<span class="text-xs ml-2">(informativo: ${pregunta.maxlength} caracteres recomendados máximo)</span>` : ''}
+                </div>
             `;
             
         case 'textarea':
@@ -244,10 +318,10 @@ function crearCampoInput(pregunta, valorActual) {
                     id="campoRespuesta"
                     class="textarea textarea-bordered w-full h-40 bg-gray-700 text-white text-base"
                     placeholder="${pregunta.placeholder}"
-                    maxlength="${pregunta.maxlength}"
                 >${valor}</textarea>
                 <div class="text-right text-sm text-gray-400 mt-1">
-                    <span id="charCount">${valor.length}</span> / ${pregunta.maxlength}
+                    <span id="charCount">${valor.length}</span> caracteres
+                    ${pregunta.maxlength ? `<span class="text-xs ml-2">(informativo: ${pregunta.maxlength} caracteres recomendados máximo)</span>` : ''}
                 </div>
             `;
             
@@ -617,9 +691,9 @@ function manejarTeclado(e) {
     }
 }
 
-// Contador de caracteres para textarea
+// Contador de caracteres para textarea e inputs
 document.addEventListener('input', (e) => {
-    if (e.target.id === 'campoRespuesta' && e.target.tagName === 'TEXTAREA') {
+    if (e.target.id === 'campoRespuesta' && (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT')) {
         const charCount = document.getElementById('charCount');
         if (charCount) {
             charCount.textContent = e.target.value.length;

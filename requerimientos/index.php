@@ -131,6 +131,21 @@ $preguntasJson = json_encode($preguntas, JSON_UNESCAPED_UNICODE);
             color: #6B7280;
         }
         
+        /* Navegación clickeable en sidebar */
+        .step-item.clickable {
+            cursor: pointer;
+        }
+        
+        .step-item.clickable:hover {
+            background-color: rgba(249, 115, 22, 0.1);
+            transform: translateX(4px);
+        }
+        
+        .step-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
         /* Focus visible para accesibilidad */
         *:focus-visible {
             outline: 2px solid var(--naranja-primario);

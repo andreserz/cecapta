@@ -1,0 +1,22 @@
+{
+    "fecha_guardado": "2025-10-24 11:34:55",
+    "tipo": "backup",
+    "respuestas": {
+        "nombre_empresa": "CECAPTA",
+        "situacion_actual": "",
+        "objetivos_asistente": "",
+        "metricas_esperadas": "",
+        "nombre_asistente": "",
+        "tono_comunicacion": "",
+        "saludo": "",
+        "casos_uso": "",
+        "flujos_conversacionales": "",
+        "reglas_negocio": "",
+        "preguntas_frecuentes": "",
+        "horario_atencion": "",
+        "mensaje_despedida": "",
+        "url_website": ""
+    },
+    "pregunta_actual": 0,
+    "timestamp_cliente": "2025-10-24T17:34:55.677Z"
+}

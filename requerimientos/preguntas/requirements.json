@@ -4,7 +4,7 @@
         "tipo": "text",
         "placeholder": "Ejemplo: Empresa S.A de C.V.",
         "nombre": "nombre_empresa",
-        "maxlength": 200,
+        "maxlength": 10000,
         "valor_defecto": "CECAPTA",
         "dependencia_previa": null
     },
@@ -13,7 +13,7 @@
         "tipo": "textarea",
         "placeholder": "Ejemplo: Actualmente no prestamos atención a los clientes fuera de nuestro horario de oficina…",
         "nombre": "situacion_actual",
-        "maxlength": 2000,
+        "maxlength": 10000,
         "dependencia_previa": null
     },
     {
@@ -21,7 +21,7 @@
         "tipo": "textarea",
         "placeholder": "Ejemplo: Atender y dar seguimiento centralizado de mis prospecto…",
         "nombre": "objetivos_asistente",
-        "maxlength": 2000,
+        "maxlength": 10000,
         "dependencia_previa": null
     },
     {
@@ -29,7 +29,7 @@
         "tipo": "textarea",
         "placeholder": "Ejemplo: Mejora en mi embudo de ventas, mejorando mi tasa de conversión…",
         "nombre": "metricas_esperadas",
-        "maxlength": 2000,
+        "maxlength": 10000,
         "dependencia_previa": null
     },
     {
@@ -37,7 +37,7 @@
         "tipo": "text",
         "placeholder": "Ejemplo: Juan Pérez",
         "nombre": "nombre_asistente",
-        "maxlength": 200,
+        "maxlength": 10000,
         "dependencia_previa": null
     },
     {
@@ -53,7 +53,7 @@
         "tipo": "text",
         "placeholder": "Ejemplo: Que se genere dinámicamente",
         "nombre": "saludo",
-        "maxlength": 500,
+        "maxlength": 10000,
         "dependencia_previa": null
     },
     {
@@ -61,7 +61,7 @@
         "tipo": "textarea",
         "placeholder": "Ejemplo:\n\nCU01: Yo como [Atención a cliente] requiero [atender a los prospectos que se comuniquen a través de WhatsApp] para [Proporcionarle información relacionada con nuestros servicios]\nCriterio de aceptación: [Atención de más de 23:50 hrs de atención diaria como exitoso]\nCU02: Yo como...",
         "nombre": "casos_uso",
-        "maxlength": 5000,
+        "maxlength": 10000,
         "dependencia_previa": null
     },
     {
@@ -69,7 +69,7 @@
         "tipo": "textarea",
         "placeholder": "Ejemplo:\nCliente - Mándame info\nEmpresa - Con gusto, nuestra empresa se dedica a…\nNota: Incluir modismos, frases de argot del sector, palabras especiales o clave.",
         "nombre": "flujos_conversacionales",
-        "maxlength": 3000,
+        "maxlength": 10000,
         "dependencia_previa": null
     },
     {
@@ -77,7 +77,7 @@
         "tipo": "textarea",
         "placeholder": "Ejemplo:\n- Sólo se aceptan transferencias interbancias, no se acepta pagos en efectivo\n- Si se requiere factura, se debe considerar el IVA...",
         "nombre": "reglas_negocio",
-        "maxlength": 3000,
+        "maxlength": 10000,
         "dependencia_previa": null
     },
     {
@@ -85,7 +85,7 @@
         "tipo": "textarea",
         "placeholder": "1. ¿Cuáles son los horarios de atención?: De 8 a 14 hrs\n2. ¿Dónde están ubicados? En Calzada Principal #10\n3. ¿Qué servicios ofrecen? Damos servicio de Mantenimiento Industrial…",
         "nombre": "preguntas_frecuentes",
-        "maxlength": 3000,
+        "maxlength": 10000,
         "dependencia_previa": null
     },
     {
@@ -93,7 +93,7 @@
         "tipo": "textarea",
         "placeholder": "Ejemplo: Oficina: Lunes a Viernes de 9am a 6pm\nAsistente: Lunes a Sábado horario completo",
         "nombre": "horario_atencion",
-        "maxlength": 500,
+        "maxlength": 10000,
         "dependencia_previa": null
     },
     {
@@ -101,7 +101,7 @@
         "tipo": "text",
         "placeholder": "Ejemplo: ¡Estoy para servirte! ¡Que tengas un excelente día!",
         "nombre": "mensaje_despedida",
-        "maxlength": 300,
+        "maxlength": 10000,
         "dependencia_previa": null
     },
     {
@@ -109,7 +109,7 @@
         "tipo": "url",
         "placeholder": "https://callblasterai.com",
         "nombre": "url_website",
-        "maxlength": 500,
+        "maxlength": 10000,
         "dependencia_previa": null
     }
 ]
